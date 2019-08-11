@@ -5,6 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { AdminLayoutModule } from './admin-layout/admin-layout.module';
+import { HttpClientModule } from '@angular/common/http';
+import { DataTablesModule } from 'angular-datatables';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +18,11 @@ import { AdminLayoutModule } from './admin-layout/admin-layout.module';
     BrowserModule,
     AppRoutingModule,
     AdminLayoutModule,
-    
+    DataTablesModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule
+
     
   ],
   providers: [],
