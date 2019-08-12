@@ -39,7 +39,7 @@
                 <td>{{candidate.email}}</td>
                 <td>
                     <a href="#editCandidateModal" data-toggle="modal" (click)="passId(candidate.id)"><i class="fa fa-pen" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></i></a>&nbsp;
-                    <a href="#deleteCandidateModal" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                    <a href="#deleteCandidateModal" data-toggle="modal" (click)="passId(candidate.id)"><i class="fa fa-trash"></i></a>
                 </td>
             </tr>
         </ng-container>
