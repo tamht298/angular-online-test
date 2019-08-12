@@ -18,14 +18,13 @@ export class CandidateService {
     return this.http.get(`${this.candidatesUrl}/${id}`);
   }
   createCandidate(candidate: Candidate): Observable<any>{
-    return this.http.post(this.candidatesUrl, candidate).pipe(map((data: any) => data.result ));
-
+    return this.http.post(this.candidatesUrl, candidate).pipe(map((data: any) => data.result));
   }
-  updateCandidate(id: number, value: any): Observable<any>{
-    return this.http.put(`${this.candidatesUrl}/${id}`, value);
+  updateCandidate(value: any): Observable<any>{
+    return this.http.put(`${this.candidatesUrl}`, value).pipe(map((data: any) => data.result));
   }
-  deleteCandidate(id: number){
-    return this.http.delete(`${this.candidatesUrl}/${id}`);
+  deleteCandidate(id: number): Observable<any>{
+    return this.http.delete(`${this.candidatesUrl}/${id}`, { responseType: 'text' });
   }
   
 }

@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms'
 import { DataTablesModule } from 'angular-datatables';
 
 
+
 @NgModule({
   declarations: [HeaderComponent, SidebarComponent, AdminLayoutComponent, DashboardComponent, BreadcrumbsComponent, PageNotFoundComponent, CandidatesComponent],
   imports: [
