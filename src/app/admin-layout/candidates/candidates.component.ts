@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
-import { Subject } from 'rxjs';
 
 import { Candidate } from 'src/app/models/candidate';
 import { CandidateService } from 'src/app/services/candidate.service';
 
 import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
+import { timeout } from 'q';
 
 
 @Component({
@@ -12,48 +13,40 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './candidates.component.html',
   styleUrls: ['./candidates.component.scss']
 })
-export class CandidatesComponent implements OnDestroy, OnInit {
+export class CandidatesComponent implements OnInit {
 
  
-  firstName=''; lastName=''; gender=''; email=''; phone=''; 
+  // firstName=''; lastName=''; gender=''; email=''; phone=''; 
   loading = false;
-  dtOptions: DataTables.Settings = {};
-  candidates: Candidate[] = [];
-  // We use this trigger because fetching the list of persons can be quite long,
-  // thus we ensure the data is fetched before rendering
-  dtTrigger: Subject<any> = new Subject();
+  editedCandidate: any ={};
+  newCandidate: any={};
+  candidates: Candidate[];
+  
   candidate: Candidate;
   selectedId: number;
-  selectedCandidate: Candidate;
+  
  
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
     
    }
 
   ngOnInit() {  
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 10
-    };
+  
     this.loadData();
     
   }
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
-    this.loading=false;
-  }
+
   loadData(){
     this.loading=true;
     this.candidateSerice.getCandidates().subscribe(data=>{
       this.candidates=data;
-      this.dtTrigger.next();
+      this.loading=false;
     },
     error=>console.log(error));
   }
   addCandidate(){
     
-    this.candidate= new Candidate(this.firstName, this.lastName, this.gender, this.phone, this.email);
+    this.candidate= this.newCandidate;
     this.candidateSerice.createCandidate(this.candidate).subscribe(data=>{
       this.candidates=data;
       
@@ -74,6 +67,10 @@ export class CandidatesComponent implements OnDestroy, OnInit {
     this.selectedId=id;
     
   }
+  passCandidate(candidate: Candidate){
+    this.editedCandidate= candidate;
+  
+  }
  
   //delete event click
   removeCandidate(id: number){
@@ -81,7 +78,8 @@ export class CandidatesComponent implements OnDestroy, OnInit {
       
       console.log(data);
       //reload data
-      this.candidateSerice.getCandidates().subscribe(data=>this.candidates=data);
+      // this.candidateSerice.getCandidates().subscribe(data=>this.candidates=data);
+      this.loadData();
       //close modal
       this.closeModalById('closeDeleteModal');
       //show successful toast
@@ -94,13 +92,23 @@ export class CandidatesComponent implements OnDestroy, OnInit {
       
     });
   }
+  editCandidate(candidate: Candidate){
+    this.candidateSerice.updateCandidate(candidate).subscribe(()=>{
+      
+      this.candidateSerice.getCandidates().subscribe(data=>this.candidates=data);
+      //close modal
+      this.closeModalById('closeEditModal');
+      //show successful toast
+      this.showSuccess('Success', 'Edited successfully!');
+    })
+  }
   //define successful toast
   showSuccess(title: string, message: string) {
-    this.toastr.success(title, message);
+    this.toastr.success(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
   }
   //define error toast
   showError(title: string, message: string){
-    this.toastr.error(title, message);
+    this.toastr.error(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
   }
   closeModalById(idModal: string){
     document.getElementById(idModal).click();

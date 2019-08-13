@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 import { CandidatesComponent } from './candidates/candidates.component';
 import { FormsModule } from '@angular/forms'
-import { DataTablesModule } from 'angular-datatables';
+
 
 
 
@@ -18,7 +18,7 @@ import { DataTablesModule } from 'angular-datatables';
   imports: [
     CommonModule,
     RouterModule,
-    DataTablesModule,
+   
     FormsModule
   ],
   exports: [AdminLayoutComponent]

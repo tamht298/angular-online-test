@@ -20,8 +20,8 @@ export class CandidateService {
   createCandidate(candidate: Candidate): Observable<any>{
     return this.http.post(this.candidatesUrl, candidate).pipe(map((data: any) => data.result));
   }
-  updateCandidate(value: any): Observable<any>{
-    return this.http.put(`${this.candidatesUrl}`, value).pipe(map((data: any) => data.result));
+  updateCandidate(candidate: Candidate): Observable<any>{
+    return this.http.put(`${this.candidatesUrl}`, candidate).pipe(map((data: any) => data.result));
   }
   deleteCandidate(id: number): Observable<any>{
     return this.http.delete(`${this.candidatesUrl}/${id}`, { responseType: 'text' });
