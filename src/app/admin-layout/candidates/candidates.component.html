@@ -3,15 +3,15 @@
         <div class="col-sm-6">
             <h2>Manage <b>Candidates</b></h2>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6 d-flex justify-content-end">
             <a href="#addCandidateModal" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i>
-                 <span> Add New</span></a> &nbsp;
-            
+                <span> Add New</span></a> &nbsp;
         </div>
     </div>
 </div>
 <br>
-<table class="row-border table hover">
+<div class="table-responsive-sm">
+<table class="table-bordered table hover">
 
     <thead>
         <tr>
@@ -28,18 +28,20 @@
         <ng-container *ngIf="loading">
             <div>Loading...</div>
         </ng-container>
-        
+
         <ng-container *ngFor="let candidate of candidates; let i = index">
             <tr class="item-table">
-                <td>{{i+1}}</td>
+                <th scope="row">{{i+1}}</th>
                 <td>{{candidate.firstName}}</td>
                 <td>{{candidate.lastName}}</td>
                 <td>{{candidate.gender}}</td>
                 <td>{{candidate.phone}}</td>
                 <td>{{candidate.email}}</td>
                 <td>
-                    <a href="#editCandidateModal" data-toggle="modal" (click)="passCandidate(candidate)"><i class="fa fa-pen"></i></a>&nbsp;
-                    <a href="#deleteCandidateModal" data-toggle="modal" (click)="passId(candidate.id)"><i class="fa fa-trash"></i></a>
+                    <a href="#editCandidateModal" data-toggle="modal" (click)="passCandidate(candidate)"><i
+                            class="fa fa-pen"></i></a>&nbsp;
+                    <a href="#deleteCandidateModal" data-toggle="modal" (click)="passId(candidate.id)"><i
+                            class="fa fa-trash"></i></a>
                 </td>
             </tr>
         </ng-container>
@@ -48,7 +50,7 @@
 
 <!--  -->
 <!-- Add Modal HTML -->
-<div id="addCandidateModal"  tabindex="-1" role="dialog" class="modal fade">
+<div id="addCandidateModal" tabindex="-1" role="dialog" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <form (ngSubmit)="addCandidate()">
@@ -60,13 +62,15 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>First Name</label>
-                                <input type="text" class="form-control" name="firstname" [(ngModel)]="newCandidate.firstName">
-                            </div>                          
+                                <input type="text" class="form-control" name="firstname"
+                                    [(ngModel)]="newCandidate.firstName">
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Last Name</label>
-                                <input type="text" class="form-control" name="lastname" [(ngModel)]="newCandidate.lastName">
+                                <input type="text" class="form-control" name="lastname"
+                                    [(ngModel)]="newCandidate.lastName">
                             </div>
                         </div>
                     </div>
@@ -85,7 +89,8 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="gender">Gender</label>
-                                <select class="form-control" id="gender" name="gender" [(ngModel)]="newCandidate.gender">
+                                <select class="form-control" id="gender" name="gender"
+                                    [(ngModel)]="newCandidate.gender">
                                     <option value="MALE">Male</option>
                                     <option value="FEMALE">Female</option>
 
@@ -106,7 +111,7 @@
 </div>
 <!-- Edit Modal HTML -->
 <div *ngIf="editedCandidate">
-    <div id="editCandidateModal" class="modal fade" >
+    <div id="editCandidateModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form (ngSubmit)="editCandidate(editedCandidate)">
@@ -119,13 +124,15 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" class="form-control" name="firstname" [(ngModel)]="editedCandidate.firstName">
-                                </div>                          
+                                    <input type="text" class="form-control" name="firstname"
+                                        [(ngModel)]="editedCandidate.firstName">
+                                </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" class="form-control" name="lastname" [(ngModel)]="editedCandidate.lastName">
+                                    <input type="text" class="form-control" name="lastname"
+                                        [(ngModel)]="editedCandidate.lastName">
                                 </div>
                             </div>
                         </div>
@@ -133,55 +140,62 @@
                             <label>Email</label>
                             <input type="email" class="form-control" name="email" [(ngModel)]="editedCandidate.email">
                         </div>
-    
+
                         <div class="row">
                             <div class="col-sm-8">
                                 <div class="form-group">
                                     <label>Phone</label>
-                                    <input type="text" class="form-control" name="phone" [(ngModel)]="editedCandidate.phone">
+                                    <input type="text" class="form-control" name="phone"
+                                        [(ngModel)]="editedCandidate.phone">
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="gender">Gender</label>
-                                    <select class="form-control" id="gender" name="gender" [(ngModel)]="editedCandidate.gender">
+                                    <select class="form-control" id="gender" name="gender"
+                                        [(ngModel)]="editedCandidate.gender">
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
-    
+
                                     </select>
                                 </div>
                             </div>
                         </div>
-    
-    
+
+
                     </div>
                     <div class="modal-footer">
-                        <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal"
+                            value="Cancel">
                         <input type="submit" class="btn btn-info" value="Save">
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    </div>
+</div>
 <!-- Delete Modal HTML -->
-<div id="deleteCandidateModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form (ngSubmit)= "removeCandidate(selectedId)">
-                <div class="modal-header">
-                    <h4 class="modal-title">Delete Candidate</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this candidate?</p>
-                    <p class="text-warning"><small>This action cannot be undone.</small></p>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" id="closeDeleteModal" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                    <input type="submit" class="btn btn-danger" value="Delete">
-                </div>
-            </form>
+<div *ngIf="selectedId">
+    <div id="deleteCandidateModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form (ngSubmit)="removeCandidate(selectedId)">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete Candidate</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this candidate?</p>
+                        <p class="text-warning"><small>This action cannot be undone.</small></p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" id="closeDeleteModal" class="btn btn-default" data-dismiss="modal"
+                            value="Cancel">
+                        <input type="submit" class="btn btn-danger" value="Delete">
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+</div> 
