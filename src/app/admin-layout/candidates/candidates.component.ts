@@ -25,6 +25,7 @@ export class CandidatesComponent implements OnInit {
   candidate: Candidate;
   selectedId: number;
   
+  
  
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
     
@@ -113,4 +114,5 @@ export class CandidatesComponent implements OnInit {
   closeModalById(idModal: string){
     document.getElementById(idModal).click();
   }
+
 }
