@@ -26,7 +26,8 @@ export class CandidatesComponent implements OnInit {
   selectedId: number;
   searchText="";
 
-  //Pagination config
+  p: Number = 1;
+  count: Number = 2;
   
  
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
@@ -71,7 +72,7 @@ export class CandidatesComponent implements OnInit {
   }
   //get id when click button
   getSelectedId(id:number){
-    // this.selectedId=id;
+     this.selectedId=id;
     this.candidateSerice.getCandidateById(id).subscribe(data=>this.selectedCandidate=data);
     
   }

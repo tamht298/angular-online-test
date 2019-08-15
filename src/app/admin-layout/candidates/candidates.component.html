@@ -18,7 +18,7 @@
 </div>
 <br>
 <div class="col-sm-12">
-    <div class="table-responsive-sm">
+    <div class="table-responsive-md">
         <table class="table-bordered table hover">
 
             <thead>
@@ -37,8 +37,8 @@
                     <div>Loading...</div>
                 </ng-container>
 
-                <ng-container *ngFor="let candidate of candidates | searchFilter:searchText;let i = index">
-                    <tr class="item-table">
+                <ng-container *ngFor="let candidate of candidates | paginate: { itemsPerPage: count, currentPage: p } | searchFilter:searchText;let i = index">
+                    <tr>
                         <th scope="row">{{i+1}}</th>
                         <td>{{candidate.firstName}}</td>
                         <td>{{candidate.lastName}}</td>
@@ -46,16 +46,21 @@
                         <td>{{candidate.phone}}</td>
                         <td>{{candidate.email}}</td>
                         <td>
-                            <a href="#editCandidateModal" data-toggle="modal" (click)="getSelectedId(candidate.id)"><i
+                            <a href="#editCandidateModal" class="btn btn-primary" data-toggle="modal" (click)="getSelectedId(candidate.id)"><i
                             class="fa fa-pen"></i></a>&nbsp;
-                            <a href="#deleteCandidateModal" data-toggle="modal" (click)="getSelectedId(candidate.id)"><i
+                            <a href="#deleteCandidateModal" class="btn btn-danger" data-toggle="modal" (click)="getSelectedId(candidate.id)"><i
                             class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 </ng-container>
             </tbody>
         </table>
+        
     </div>
+    <!-- Paging  -->
+    <div class="text-right">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
 </div>
 <!--  -->
 <!-- Add Modal HTML -->
@@ -63,9 +68,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form name="addForm" (ngSubmit)="addCandidate()" #form="ngForm" novalidate>
-                <div class="modal-header">
-                    <h4 class="modal-title">Add Candidate</h4>
-                </div>
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Employee</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-sm-6">

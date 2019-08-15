@@ -9,8 +9,7 @@ export class SearchPipe implements PipeTransform {
         if (!term) { return value; }
         return value.filter((item: any) => {
           for (let prop in item) {
-            if (typeof item[prop] === 'string' && 
-              item[prop].toLowerCase().indexOf(term.toLowerCase()) > -1) {
+            if (typeof item[prop] === 'string' &&  item[prop].toLowerCase().indexOf(term.toLowerCase()) > -1) {
               return true;
             }
           }

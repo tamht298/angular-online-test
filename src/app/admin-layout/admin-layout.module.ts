@@ -10,7 +10,7 @@ import { PageNotFoundComponent } from '../page-not-found/page-not-found.componen
 import { CandidatesComponent } from './candidates/candidates.component';
 import { FormsModule } from '@angular/forms';
 import { SearchPipe } from '../shared/search.pipe';
-
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 
@@ -19,7 +19,8 @@ import { SearchPipe } from '../shared/search.pipe';
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ],
   exports: [AdminLayoutComponent]
 })
