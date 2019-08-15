@@ -8,6 +8,14 @@
                 <span> Add New</span></a> &nbsp;
         </div>
     </div>
+    <div class="input-group">
+        <input name="searchtable" type="text" [(ngModel)]="searchText" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button">
+        <i class="fas fa-search"></i>
+      </button>
+        </div>
+    </div>
 </div>
 <br>
 <div class="table-responsive-sm">
@@ -29,7 +37,7 @@
                 <div>Loading...</div>
             </ng-container>
 
-            <ng-container *ngFor="let candidate of candidates; let i = index">
+            <ng-container *ngFor="let candidate of candidates | searchFilter:searchText;let i = index">
                 <tr class="item-table">
                     <th scope="row">{{i+1}}</th>
                     <td>{{candidate.firstName}}</td>

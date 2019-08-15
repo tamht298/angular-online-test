@@ -24,6 +24,7 @@ export class CandidatesComponent implements OnInit {
   
   candidate: Candidate;
   selectedId: number;
+  searchText="";
   
   
  
