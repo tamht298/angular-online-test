@@ -18,7 +18,7 @@ export class CandidatesComponent implements OnInit {
  
   // firstName=''; lastName=''; gender=''; email=''; phone=''; 
   loading = false;
-  editedCandidate: any ={};
+  selectedCandidate: any ={};
   newCandidate: any={};
   candidates: Candidate[];
   
@@ -64,18 +64,16 @@ export class CandidatesComponent implements OnInit {
   
   }
   //get id when click button
-  passId(id:number){
-    this.selectedId=id;
+  getSelectedId(id:number){
+    // this.selectedId=id;
+    this.candidateSerice.getCandidateById(id).subscribe(data=>this.selectedCandidate=data);
     
   }
-  passCandidate(candidate: Candidate){
-    this.editedCandidate= candidate;
-  
-  }
+
  
   //delete event click
-  removeCandidate(id: number){
-    this.candidateSerice.deleteCandidate(id).subscribe(data=>{
+  removeCandidate(){
+    this.candidateSerice.deleteCandidate(this.selectedId).subscribe(data=>{
       
       console.log(data);
       //reload data
@@ -93,8 +91,8 @@ export class CandidatesComponent implements OnInit {
       
     });
   }
-  editCandidate(candidate: Candidate){
-    this.candidateSerice.updateCandidate(candidate).subscribe(()=>{
+  editCandidate(){
+    this.candidateSerice.updateCandidate(this.selectedCandidate).subscribe(()=>{
       
       this.candidateSerice.getCandidates().subscribe(data=>this.candidates=data);
       //close modal
