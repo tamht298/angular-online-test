@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 import { CandidatesComponent } from './candidates/candidates.component';
 import { FormsModule } from '@angular/forms';
-import { SearchPipe } from '../shared/search.pipe'
+import { SearchPipe } from '../shared/search.pipe';
 
 
 
@@ -19,7 +19,6 @@ import { SearchPipe } from '../shared/search.pipe'
   imports: [
     CommonModule,
     RouterModule,
-    
     FormsModule
   ],
   exports: [AdminLayoutComponent]

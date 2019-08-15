@@ -25,18 +25,23 @@ export class CandidatesComponent implements OnInit {
   candidate: Candidate;
   selectedId: number;
   searchText="";
-  
+
+  //Pagination config
   
  
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
     
    }
 
+   
+
   ngOnInit() {  
   
     this.loadData();
-    
+   
   }
+
+
 
   loadData(){
     this.loading=true;
@@ -114,4 +119,7 @@ export class CandidatesComponent implements OnInit {
     document.getElementById(idModal).click();
   }
 
+
+  //Pagination
+  
 }
