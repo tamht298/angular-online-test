@@ -22,6 +22,7 @@ export class QuestionComponent implements OnInit {
   typeQuestion: QuestionType;
   questionTypeId: number;
   subjects: Subject[];
+  selectedSubject: Subject;
   public answers: any[]=[];
   constructor(private questionTypeService : QuestiontypeService, private subjectSevice: SubjectService) {
     this.answers.push(this.answer1, this.answer2);
@@ -47,8 +48,8 @@ export class QuestionComponent implements OnInit {
   loadSubject(){
     this.subjectSevice.getSubject().subscribe(data=>this.subjects=data);
   }
-  getPart(subject: Subject){
-    console.log(subject);
+  getPart(){
+    console.log(this.selectedSubject);
   }
 
 

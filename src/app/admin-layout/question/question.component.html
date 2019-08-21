@@ -87,9 +87,9 @@
                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="">Môn học</label>
-                                            <select name="" id="" class="form-control">
+                                            <select name="subject" id="" class="form-control" [(ngModel)]="selectedSubject" (change)="getPart()">
                                                 <ng-container *ngFor="let subject of subjects">
-                                                        <option value="" (click)="getPart(subject)">{{subject.subjectName}}</option>
+                                                        <option [ngValue]="subject">{{subject.subjectName}}</option>
                                                 </ng-container>
                                                 
                                                 
