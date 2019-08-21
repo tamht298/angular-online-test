@@ -7,6 +7,7 @@ import { QuestionType } from 'src/app/models/question_type';
 import { SubjectService } from 'src/app/services/subject.service';
 import { Subject } from 'src/app/models/subject';
 import { QuestionService } from 'src/app/services/question.service';
+import { Part } from 'src/app/models/part';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class QuestionComponent implements OnInit {
   questionTypeId: number;
   subjects: Subject[];
   selectedSubject: Subject;
+  parts: Part[];
   public answers: any[]=[];
   constructor(private questionTypeService : QuestiontypeService, private subjectSevice: SubjectService, private questionService: QuestionService) {
     this.answers.push(this.answer1, this.answer2);
@@ -53,8 +55,10 @@ export class QuestionComponent implements OnInit {
     this.subjectSevice.getSubject().subscribe(data=>this.subjects=data);
   }
   getPart(){
-    console.log(this.selectedSubject);
+    
     //get đối tượng subject là selectedSubject
+    this.parts=this.selectedSubject.partList;
+   
 
   }
   loadQuestions(){

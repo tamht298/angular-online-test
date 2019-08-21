@@ -108,9 +108,7 @@
                                             <select name="subject" id="" class="form-control" [(ngModel)]="selectedSubject" (change)="getPart()">
                                                 <ng-container *ngFor="let subject of subjects">
                                                         <option [ngValue]="subject">{{subject.subjectName}}</option>
-                                                </ng-container>
-                                                
-                                                
+                                                </ng-container>    
                                             </select>
                                         </div>
                                    </div>
@@ -118,7 +116,11 @@
                                     <div class="form-group">
                                         <label for="">Phần</label>
                                         <select name="" id="" class="form-control">
-                                            <option value=""></option>
+                                            <ng-container *ngFor="let part of parts">
+                                                    <option value="">{{part.partName}}</option>
+                                            </ng-container>
+                                            
+                                            
                                         </select>
                                     </div>
                                </div>
