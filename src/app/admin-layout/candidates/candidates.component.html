@@ -1,11 +1,11 @@
-<div class="container">
-    <div class="row">
+<div class="container-fluid">
+    <div class="row" style="margin-bottom: 0.5 rem">
         <div class="col-sm-10">
-            <h2>Manage Candidates</h2>
+            <h2>Quản lý sinh viên</h2>
         </div>
         <div class="col-sm-2">
             <a href="#addCandidateModal" class="btn btn-outline-primary" data-toggle="modal"><i class="fa fa-plus"></i>
-                <span> Add New</span></a> &nbsp;
+                <span> Thêm mới</span></a> &nbsp;
         </div>
     </div>
     <div class="row">
@@ -24,10 +24,10 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">First name</th>
-                    <th scope="col">Last name</th>
-                    <th scope="col">Gender</th>
-                    <th scope="col">Phone</th>
+                    <th scope="col">Họ</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Giới tính</th>
+                    <th scope="col">Điện thoại</th>
                     <th scope="col">Email</th>
                     <th>Action</th>
                 </tr>
@@ -40,8 +40,9 @@
                 <ng-container *ngFor="let candidate of candidates | paginate: { itemsPerPage: count, currentPage: p } | searchFilter:searchText;let i = index">
                     <tr>
                         <th scope="row">{{i+1}}</th>
-                        <td>{{candidate.firstName}}</td>
                         <td>{{candidate.lastName}}</td>
+                        <td>{{candidate.firstName}}</td>
+                        
                         <td>{{candidate.gender}}</td>
                         <td>{{candidate.phone}}</td>
                         <td>{{candidate.email}}</td>
@@ -69,7 +70,7 @@
         <div class="modal-content">
             <form name="addForm" (ngSubmit)="addCandidate()" #form="ngForm" novalidate>
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Employee</h4>
+                        <h4 class="modal-title">Thêm sinh viên</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                 <div class="modal-body">
@@ -148,7 +149,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="closeAddModal" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                    <input type="submit" class="btn btn-primary" value="Save" [disabled]="form.invalid">
+                    <input type="submit" class="btn btn-primary" value="Save">
                 </div>
             </form>
         </div>
@@ -220,7 +221,7 @@
                             <div class="form-group">
                                 <label for="editGender">Gender</label>
                                 <select class="form-control" id="editGender" #editGender="ngModel" ngModel name="editGender" [(ngModel)]="selectedCandidate.gender" required>
-                                        <option value="NONE">None</option>
+                                        <option value="">None</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         </select>
@@ -237,7 +238,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                    <input type="submit" class="btn btn-info" value="Save">
+                    <input type="submit" class="btn btn-info" value="Save" >
                 </div>
             </form>
         </div>

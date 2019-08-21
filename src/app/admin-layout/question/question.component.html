@@ -1,0 +1,141 @@
+
+<div class="container-fluid">
+    <div class="row" style="margin-bottom: 0.5 rem">
+        <div class="col-sm-10">
+            <h2>Ngân hàng câu hỏi</h2>
+        </div>
+        <div class="col-sm-2">
+            <a href="#addModal" class="btn btn-outline-primary" data-toggle="modal"><i class="fa fa-plus"></i>
+                <span> Thêm mới</span></a> &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="input-group">
+                <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá cần tìm..." aria-label="Search" aria-describedby="basic-addon2">
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="col-sm-12">
+    <div class="table-responsive-md">
+            <table class="table-bordered table hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Câu hỏi</th>
+                            
+                            <th scope="col">Điểm</th>
+                            <th scope="col">Phần</th>
+                            <th scope="col">Kiểu câu hỏi</th>
+                            <th scope="col">Độ khó</th>
+                            <th scope="col">Trộn?</th>
+                            <th>Action</th>
+                        </tr>
+                        
+                </thead>
+                <tbody>
+                        <tr>
+                                <th scope="row"></th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                               
+                                <td>
+                                    <a href="#editCandidateModal" class="btn btn-primary" data-toggle="modal"><i
+                                    class="fa fa-pen"></i></a>&nbsp;
+                                    <a href="#deleteCandidateModal" class="btn btn-danger" data-toggle="modal" ><i
+                                    class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+
+<!-- Add Modal HTML -->
+<div id="addModal" tabindex="-1" role="dialog" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="addForm" (ngSubmit)="addQuestion()" #formAdd="ngForm" novalidate>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Thêm câu hỏi</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                    <div class="modal-body">
+                            <div class="form-row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>Loại câu hỏi</label>
+                                            <select class="form-control" required name="questionTypeId" [(ngModel)]="questionTypeId">
+                                                <ng-container *ngFor="let questionType of questionTypes">
+                                                        <option value="{{questionType.id}}">{{questionType.name}}</option>
+                                                </ng-container>
+                                                
+                                                    
+                                                    
+                                            </select>    
+                                        </div>
+                                    </div>
+                                </div>
+                               <div class="form-row">
+                                   <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="">Môn học</label>
+                                            <select name="" id="" class="form-control">
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                   </div>
+                                   <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="">Phần</label>
+                                        <select name="" id="" class="form-control">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                               </div>
+                               </div>
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Câu hỏi</label>
+                                    <input type="text" placeholder="Nhập câu hỏi" class="form-control" name="questionContent" ngModel  required>
+                                   
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Đáp án</label>
+                                    <ng-container *ngFor="let answer of answers; let i=index">
+                                            <div class="form-check mb-1">
+                                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" >
+                                                    <input type="text" name="answer{{i+1}}" class="form-control" ngModel>
+                                            </div>
+                                    </ng-container>
+                                    
+                                    
+                                    
+                                    <button type="button" class="btn btn-primary my-1">Thêm đáp án</button>
+                                 
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" id="closeAddModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">
+                        <input type="submit" class="btn btn-primary" value="Tạo">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

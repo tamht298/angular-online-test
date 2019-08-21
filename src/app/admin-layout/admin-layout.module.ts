@@ -11,11 +11,12 @@ import { CandidatesComponent } from './candidates/candidates.component';
 import { FormsModule } from '@angular/forms';
 import { SearchPipe } from '../shared/search.pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { QuestionComponent } from './question/question.component';
 
 
 
 @NgModule({
-  declarations: [HeaderComponent, SidebarComponent, AdminLayoutComponent, DashboardComponent, BreadcrumbsComponent, PageNotFoundComponent, CandidatesComponent, SearchPipe],
+  declarations: [HeaderComponent, SidebarComponent, AdminLayoutComponent, DashboardComponent, BreadcrumbsComponent, PageNotFoundComponent, CandidatesComponent, SearchPipe, QuestionComponent],
   imports: [
     CommonModule,
     RouterModule,
