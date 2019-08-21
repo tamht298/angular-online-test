@@ -5,6 +5,7 @@ import { Form, NgForm } from '@angular/forms';
 import { Question } from 'src/app/models/question';
 import { QuestionType } from 'src/app/models/question_type';
 import { SubjectService } from 'src/app/services/subject.service';
+import { Subject } from 'src/app/models/subject';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class QuestionComponent implements OnInit {
   question: any={};
   typeQuestion: QuestionType;
   questionTypeId: number;
+  subjects: Subject[];
   public answers: any[]=[];
   constructor(private questionTypeService : QuestiontypeService, private subjectSevice: SubjectService) {
     this.answers.push(this.answer1, this.answer2);
@@ -32,6 +34,7 @@ export class QuestionComponent implements OnInit {
      this.questionTypes=data;
      
    });
+   this.loadSubject();
    
   }
 
@@ -42,7 +45,10 @@ export class QuestionComponent implements OnInit {
   }
 
   loadSubject(){
-
+    this.subjectSevice.getSubject().subscribe(data=>this.subjects=data);
+  }
+  getPart(subject: Subject){
+    console.log(subject);
   }
 
 

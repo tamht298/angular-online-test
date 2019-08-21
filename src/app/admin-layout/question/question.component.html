@@ -88,7 +88,11 @@
                                         <div class="form-group">
                                             <label for="">Môn học</label>
                                             <select name="" id="" class="form-control">
-                                                <option value=""></option>
+                                                <ng-container *ngFor="let subject of subjects">
+                                                        <option value="" (click)="getPart(subject)">{{subject.subjectName}}</option>
+                                                </ng-container>
+                                                
+                                                
                                             </select>
                                         </div>
                                    </div>
