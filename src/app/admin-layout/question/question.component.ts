@@ -6,6 +6,7 @@ import { Question } from 'src/app/models/question';
 import { QuestionType } from 'src/app/models/question_type';
 import { SubjectService } from 'src/app/services/subject.service';
 import { Subject } from 'src/app/models/subject';
+import { QuestionService } from 'src/app/services/question.service';
 
 
 @Component({
@@ -15,27 +16,30 @@ import { Subject } from 'src/app/models/subject';
 })
 export class QuestionComponent implements OnInit {
 
+  loading=false;
   answer1: Answer;
   answer2: Answer;
   questionTypes: QuestionType[];
   question: any={};
+  questions: Question[];
   typeQuestion: QuestionType;
   questionTypeId: number;
   subjects: Subject[];
   selectedSubject: Subject;
   public answers: any[]=[];
-  constructor(private questionTypeService : QuestiontypeService, private subjectSevice: SubjectService) {
+  constructor(private questionTypeService : QuestiontypeService, private subjectSevice: SubjectService, private questionService: QuestionService) {
     this.answers.push(this.answer1, this.answer2);
 
    }
 
   ngOnInit() {
-   this.questionTypeService.getTypes().subscribe(data=> {
+    this.loadQuestions();
+    this.questionTypeService.getTypes().subscribe(data=> {
      
      this.questionTypes=data;
      
    });
-   this.loadSubject();
+   this.loadSubjects();
    
   }
 
@@ -45,11 +49,22 @@ export class QuestionComponent implements OnInit {
     console.log(this.question.questionType);
   }
 
-  loadSubject(){
+  loadSubjects(){
     this.subjectSevice.getSubject().subscribe(data=>this.subjects=data);
   }
   getPart(){
     console.log(this.selectedSubject);
+    //get đối tượng subject là selectedSubject
+
+  }
+  loadQuestions(){
+    this.loading=true;
+    this.questionService.getQuestions().subscribe(data=>{
+      
+      this.questions=data;
+      this.loading=false;
+    });
+    
   }
 
 
