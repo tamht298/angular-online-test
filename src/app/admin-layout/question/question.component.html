@@ -26,16 +26,15 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Câu hỏi</th>
-                            
+
                             <th scope="col">Điểm</th>
-                            <th scope="col">Môn học</th>
                             <th scope="col">Phần</th>
                             <th scope="col">Kiểu câu hỏi</th>
                             <th scope="col">Độ khó</th>
                             <th scope="col">Trộn?</th>
                             <th>Hành động</th>
                         </tr>
-                        
+
                 </thead>
                 <tbody>
                         <ng-container *ngIf="loading">
@@ -45,7 +44,6 @@
                                     <th scope="row">{{i+1}}</th>
                                     <td>{{q.questionContent}}</td>
                                     <td>{{q.point}}</td>
-                                    <td></td>
                                     <td>{{q.part.partName}}</td>
                                     <td>{{q.questionType.name}}</td>
                                     <td>
@@ -62,15 +60,15 @@
                                         </span>
                                     </td>
                                     <td>{{q.shuffle}}</td>
-                                   
+
                                     <td>
                                         <a href="#editModal" class="btn btn-primary" data-toggle="modal"><i class="fa fa-pen"></i></a>&nbsp;
                                         <a href="#deleteModal" class="btn btn-danger" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
-               
-                    
-                        
+
+
+
                 </tbody>
             </table>
     </div>
@@ -94,10 +92,10 @@
                                                 <ng-container *ngFor="let questionType of questionTypes">
                                                         <option value="{{questionType.id}}">{{questionType.name}}</option>
                                                 </ng-container>
-                                                
-                                                    
-                                                    
-                                            </select>    
+
+
+
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +106,7 @@
                                             <select name="subject" id="" class="form-control" [(ngModel)]="selectedSubject" (change)="getPart()">
                                                 <ng-container *ngFor="let subject of subjects">
                                                         <option [ngValue]="subject">{{subject.subjectName}}</option>
-                                                </ng-container>    
+                                                </ng-container>
                                             </select>
                                         </div>
                                    </div>
@@ -119,8 +117,8 @@
                                             <ng-container *ngFor="let part of parts">
                                                     <option value="">{{part.partName}}</option>
                                             </ng-container>
-                                            
-                                            
+
+
                                         </select>
                                     </div>
                                </div>
@@ -130,10 +128,10 @@
                                 <div class="form-group">
                                     <label>Câu hỏi</label>
                                     <input type="text" placeholder="Nhập câu hỏi" class="form-control" name="questionContent" ngModel  required>
-                                   
+
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="form-row">
                             <div class="col-sm-12">
@@ -145,15 +143,15 @@
                                                     <input type="text" name="answer{{i+1}}" class="form-control" ngModel>
                                             </div>
                                     </ng-container>
-                                    
-                                    
-                                    
+
+
+
                                     <button type="button" class="btn btn-primary my-1">Thêm đáp án</button>
-                                 
+
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="modal-footer">
                         <input type="button" id="closeAddModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">
