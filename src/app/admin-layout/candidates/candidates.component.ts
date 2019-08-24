@@ -120,7 +120,5 @@ export class CandidatesComponent implements OnInit {
     document.getElementById(idModal).click();
   }
 
-
-  //Pagination
   
 }

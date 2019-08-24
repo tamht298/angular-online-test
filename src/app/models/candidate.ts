@@ -11,7 +11,6 @@ export class Candidate{
     updatedBy: string;
     deleted: boolean;
     
-
     constructor(firstName: string, lastName: string, gender: string, phone: string, email: string){
         this.firstName=firstName;
         this.lastName=lastName;

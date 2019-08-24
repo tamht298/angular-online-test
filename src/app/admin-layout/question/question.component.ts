@@ -7,6 +7,7 @@ import {SubjectService} from 'src/app/services/subject.service';
 import {Subject} from 'src/app/models/subject';
 import {QuestionService} from 'src/app/services/question.service';
 import {Part} from 'src/app/models/part';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -20,18 +21,24 @@ export class QuestionComponent implements OnInit {
   answer1: Answer;
   answer2: Answer;
   questionTypes: QuestionType[];
-  question: any = {};
+  qType: QuestionType;
+  newQuestion: any = {};
   questions: Question[];
-  typeQuestion: QuestionType;
-  questionTypeId: number;
   subjects: Subject[];
   selectedSubject: any = {};
+  isShuffle: boolean = true;
+  TF: boolean = false;
+  MC: boolean = false;
+  selectedAnswerTF: any;
+  
   parts: Part[];
-  public answers: any[] = [];
+  newAnswers: any[] = [];
+  tfOptions = [
+    {id: 'true', value: 'Đúng'},
+    {id: 'false', value: 'Sai'}
+  ]
 
-  constructor(private questionTypeService: QuestiontypeService, private subjectSevice: SubjectService, private questionService: QuestionService) {
-    this.answers.push(this.answer1, this.answer2);
-
+  constructor(private questionTypeService: QuestiontypeService, private subjectSevice: SubjectService, private questionService: QuestionService, private toastr: ToastrService) { 
   }
 
   ngOnInit() {
@@ -46,9 +53,35 @@ export class QuestionComponent implements OnInit {
   }
 
   addQuestion() {
+    
+    
+    if(this.selectedAnswerTF=='true'){
+      this.answer1 = new Answer(this.tfOptions[0].value, 1, true, false);
+      this.answer2 = new Answer(this.tfOptions[1].value, 2, false, false);
 
-    //gán typeQuestion với questionTypeId vừa tìm được
-    console.log(this.question.questionType);
+    }
+    else if(this.selectedAnswerTF == 'false'){
+      this.answer1 = new Answer(this.tfOptions[0].value, 1, false, false);
+      this.answer2 = new Answer(this.tfOptions[1].value, 2, true, false);
+    }
+    this.newAnswers.push(this.answer1, this.answer2);
+    this.newQuestion.deleted = false;
+    this.newQuestion.shuffle = this.isShuffle;
+    this.newQuestion.questionAnswersList=this.newAnswers;
+    
+    
+    this.questionService.createQuestion(this.newQuestion).subscribe(data=>{
+      this.questions=data;
+      this.loadQuestions();
+      
+      this.closeModalById('closeAddModal');
+      this.showSuccess('Thêm câu hỏi thành công', 'Chúc mừng');
+    }, error=>{
+      this.showError('Thêm câu hỏi thất bại', 'Lỗi')
+      
+      console.log(error);
+    });
+    
   }
 
   loadSubjects() {
@@ -56,10 +89,22 @@ export class QuestionComponent implements OnInit {
   }
 
   getPart() {
-
     //get đối tượng subject là selectedSubject
     this.parts = this.selectedSubject.partList;
+  }
+  getType(){
 
+    this.qType = this.newQuestion.questionType;
+    switch(this.qType.typeCode){
+      case 'TF':{
+        this.TF=true;
+        break;
+      }
+      case 'MC':{
+        this.MC=true;
+        break
+      }
+    }
 
   }
 
@@ -73,5 +118,16 @@ export class QuestionComponent implements OnInit {
 
   }
 
+  closeModalById(idModal: string){
+    document.getElementById(idModal).click();
+  }
 
+   //define successful toast
+   showSuccess(title: string, message: string) {
+    this.toastr.success(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
+  }
+  //define error toast
+  showError(title: string, message: string){
+    this.toastr.error(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
+  }
 }

@@ -12,14 +12,14 @@
     <div class="row">
         <div class="col-sm-5">
             <div class="input-group">
-                <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá cần tìm..." aria-label="Search" aria-describedby="basic-addon2">
+                <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá ..." aria-label="Search" aria-describedby="basic-addon2">
             </div>
         </div>
     </div>
 </div>
 <br>
 
-<div class="col-sm-12">
+<div class="col-md-12">
     <div class="table-responsive-md">
             <table class="table-bordered table hover">
                     <thead>
@@ -62,7 +62,7 @@
                                     <td>{{q.shuffle}}</td>
 
                                     <td>
-                                        <a href="#editModal" class="btn btn-primary" data-toggle="modal"><i class="fa fa-pen"></i></a>&nbsp;
+                                        <a href="#editModal" class="btn btn-primary" data-toggle="modal"><i class="fa fa-pen"></i></a>
                                         <a href="#deleteModal" class="btn btn-danger" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
@@ -88,9 +88,10 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Loại câu hỏi</label>
-                                            <select class="form-control" required name="questionTypeId" [(ngModel)]="questionTypeId">
+                                            <select class="form-control" required name="questionType" [(ngModel)]="newQuestion.questionType" (change)="getType()">
+                                                
                                                 <ng-container *ngFor="let questionType of questionTypes">
-                                                        <option value="{{questionType.id}}">{{questionType.name}}</option>
+                                                        <option [ngValue]="questionType">{{questionType.name}}</option>
                                                 </ng-container>
 
 
@@ -113,9 +114,9 @@
                                    <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="">Phần</label>
-                                        <select name="" id="" class="form-control">
+                                        <select name="part" id="" class="form-control" [(ngModel)]="newQuestion.part">
                                             <ng-container *ngFor="let part of parts">
-                                                    <option value="">{{part.partName}}</option>
+                                                    <option [ngValue]="part">{{part.partName}}</option>
                                             </ng-container>
 
 
@@ -123,11 +124,34 @@
                                     </div>
                                </div>
                                </div>
+
+                               <div class="form-row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Điểm</label>
+                                        <input type="number" placeholder="Nhập điểm số" class="form-control" name="point" [(ngModel)]="newQuestion.point" required>
+    
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Độ khó</label>
+                                        <select name="" id="" class="form-control" name="difficultyLevel" [(ngModel)]="newQuestion.difficultyLevel">
+                                            <option value="" selected hidden>Chọn độ khó</option>
+                                            <option value="1">Dễ</option>
+                                            <option value="2">Trung bình</option>
+                                            <option value="3">Khó</option>
+                                        </select>
+    
+                                    </div>
+                                </div>
+    
+                            </div>
                         <div class="form-row">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Câu hỏi</label>
-                                    <input type="text" placeholder="Nhập câu hỏi" class="form-control" name="questionContent" ngModel  required>
+                                    <input type="text" placeholder="Nhập câu hỏi" class="form-control" name="questionContent" [(ngModel)]="newQuestion.questionContent" required>
 
                                 </div>
                             </div>
@@ -135,12 +159,12 @@
                         </div>
                         <div class="form-row">
                             <div class="col-sm-12">
-                                <div class="form-group">
+                                <div class="form-group" *ngIf="MC">
                                     <label>Đáp án</label>
-                                    <ng-container *ngFor="let answer of answers; let i=index">
+                                    <ng-container *ngFor="let answer of newAnswers; let i=index">
                                             <div class="form-check mb-1">
                                                     <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" >
-                                                    <input type="text" name="answer{{i+1}}" class="form-control" ngModel>
+                                                    <input type="text" name="answer{{i+1}}" class="form-control" [(ngModel)]="newAnswers[i]">
                                             </div>
                                     </ng-container>
 
@@ -149,7 +173,19 @@
                                     <button type="button" class="btn btn-primary my-1">Thêm đáp án</button>
 
                                 </div>
+                                <div *ngIf="TF">
+                                    <label class="mr-1">Đáp án</label>
+                                    <div class="form-check form-check-inline" *ngFor="let option of tfOptions">
+                                        <input class="form-check-input" type="radio" name="radio-answer" id="radio-{{option.id}}" [(ngModel)]="selectedAnswerTF" [value]="option.id">
+                                        <label class="form-check-label" for="radio-{{option.id}}">{{option.value}}</label>
+                                      </div>
+                                      
+                                </div>
                             </div>
+                        </div>
+                        <div class="form-check">
+                                <input type="checkbox" name="shuffle" class="form-check-input" id="shuffle" [(ngModel)]="isShuffle">
+                                <label class="form-check-label" for="shuffle">Trộn đáp án?</label>
                         </div>
 
                     </div>
