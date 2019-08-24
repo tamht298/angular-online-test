@@ -88,14 +88,10 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Loại câu hỏi</label>
-                                            <select class="form-control" required name="questionType" [(ngModel)]="newQuestion.questionType" (change)="getType()">
-                                                
+                                            <select class="form-control" required name="questionType" [(ngModel)]="newQuestion.questionType" (change)="getType()">                                              
                                                 <ng-container *ngFor="let questionType of questionTypes">
                                                         <option [ngValue]="questionType">{{questionType.name}}</option>
                                                 </ng-container>
-
-
-
                                             </select>
                                         </div>
                                     </div>
@@ -159,20 +155,31 @@
                         </div>
                         <div class="form-row">
                             <div class="col-sm-12">
+                                <!-- Multiple choice -->
                                 <div class="form-group" *ngIf="MC">
-                                    <label>Đáp án</label>
+                                    <label class="d-block">Đáp án</label>
                                     <ng-container *ngFor="let answer of newAnswers; let i=index">
-                                            <div class="form-check mb-1">
-                                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" >
-                                                    <input type="text" name="answer{{i+1}}" class="form-control" [(ngModel)]="newAnswers[i]">
+                                            <div class="mb-1">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <input type="checkbox" value="" id="defaultCheck1" [checked]="answer.correct">
+                                                        </span>
+                                                            
+                                                    </div>
+                                                        
+                                                        <input type="text" name="answer{{i+1}}" class="form-control" [(ngModel)]="newAnswers[i].answerContent">
+                                                        <div class="input-group-append" *ngIf="i>1">
+                                                                <span class="input-group-text"><i class="fa fa-times" aria-hidden="true" (click)="deletedAnswer(i)"></i></span>
+                                                        </div>
+                                                </div>
+                                                    
                                             </div>
                                     </ng-container>
-
-
-
-                                    <button type="button" class="btn btn-primary my-1">Thêm đáp án</button>
+                                    <button type="button" class="btn btn-primary my-1" (click)="addFieldAnswer()">Thêm đáp án</button>
 
                                 </div>
+                                <!-- True/False -->
                                 <div *ngIf="TF">
                                     <label class="mr-1">Đáp án</label>
                                     <div class="form-check form-check-inline" *ngFor="let option of tfOptions">

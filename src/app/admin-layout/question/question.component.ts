@@ -21,7 +21,7 @@ export class QuestionComponent implements OnInit {
   answer1: Answer;
   answer2: Answer;
   questionTypes: QuestionType[];
-  qType: QuestionType;
+  qType: any;
   newQuestion: any = {};
   questions: Question[];
   subjects: Subject[];
@@ -98,11 +98,22 @@ export class QuestionComponent implements OnInit {
     switch(this.qType.typeCode){
       case 'TF':{
         this.TF=true;
+        this.MC=false;
+        console.log('TF');
+        
         break;
       }
       case 'MC':{
         this.MC=true;
-        break
+        this.TF=false;
+        this.newAnswers.length=0;
+        this.newAnswers.push(new Answer('', 1, false, false), new Answer('', 2, false, false));
+        
+        console.log(this.newAnswers);
+        
+        
+        
+        break;
       }
     }
 
@@ -129,5 +140,14 @@ export class QuestionComponent implements OnInit {
   //define error toast
   showError(title: string, message: string){
     this.toastr.error(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
+  }
+
+  //xoá answer
+  deletedAnswer(index: number){
+    if(this.newAnswers.length>2)
+    this.newAnswers.splice(index, 1);
+  }
+  addFieldAnswer(){
+    this.newAnswers.push(new Answer('', this.newAnswers.length, false, false))
   }
 }
