@@ -10,6 +10,7 @@ import {Part} from 'src/app/models/part';
 import { ToastrService } from 'ngx-toastr';
 
 
+
 @Component({
   selector: 'app-question',
   templateUrl: './question.component.html',
@@ -23,13 +24,14 @@ export class QuestionComponent implements OnInit {
   questionTypes: QuestionType[];
   qType: any;
   newQuestion: any = {};
-  questions: Question[];
+  questions: Question[]=[];
   subjects: Subject[];
   selectedSubject: any = {};
   isShuffle: boolean = true;
   TF: boolean = false;
   MC: boolean = false;
   selectedAnswerTF: any;
+  selectedQuestion: Question;
   
   parts: Part[];
   newAnswers: any[] = [];
@@ -38,8 +40,13 @@ export class QuestionComponent implements OnInit {
     {id: 'false', value: 'Sai'}
   ]
 
-  constructor(private questionTypeService: QuestiontypeService, private subjectSevice: SubjectService, private questionService: QuestionService, private toastr: ToastrService) { 
-  }
+  constructor(
+    private questionTypeService: QuestiontypeService,
+    private subjectSevice: SubjectService, 
+    private questionService: QuestionService, 
+    private toastr: ToastrService
+    
+    ) {}
 
   ngOnInit() {
     this.loadQuestions();
@@ -82,7 +89,7 @@ export class QuestionComponent implements OnInit {
       this.loadQuestions();
       
       this.closeModalById('closeAddModal');
-      this.showSuccess('Thêm câu hỏi thành công', 'Chúc mừng');
+      this.showSuccess('Thêm câu hỏi thành công', 'Hoàn thành');
     }, error=>{
       this.showError('Thêm câu hỏi thất bại', 'Lỗi')
       
@@ -130,7 +137,7 @@ export class QuestionComponent implements OnInit {
     this.loading = true;
     this.questionService.getQuestions().subscribe(data => {
 
-      this.questions = data;
+      this.questions = data.filter(item=>item.deleted===false);
       this.loading = false;
     });
 
@@ -163,11 +170,23 @@ export class QuestionComponent implements OnInit {
   
     
   }
-  getChecked(){
-    //item.correct=!item.correct;
-    console.log(this.newAnswers);
+
+  getSelected(q: Question){
+    this.selectedQuestion=q;
     
     
-    
+  }
+  deletedQuestion(){
+    this.selectedQuestion.deleted=true;
+    this.questionService.deleteQuestion(this.selectedQuestion).subscribe(data=>{
+      
+      this.loadQuestions();
+      this.closeModalById('closeDeleteModal');
+      this.showSuccess('Xoá thành công', 'Hoàn thành');
+    }, error=>{
+      console.log(error);
+      
+      this.showError('Xoá thất bại', 'Lỗi');
+    })
   }
 }

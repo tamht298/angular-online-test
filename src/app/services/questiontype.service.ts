@@ -14,4 +14,5 @@ export class QuestiontypeService {
   getTypes(): Observable<any[]>{
     return this.http.get<any[]>(this.baseUrl);
   }
+  
 }

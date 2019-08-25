@@ -17,4 +17,8 @@ export class QuestionService {
   createQuestion(question: any): Observable<any>{
     return this.http.post<any>(this.baseUrl, question).pipe(map((data: any) => data.result));
   }
+  deleteQuestion(question: Question): Observable<any>{
+    return this.http.put(this.baseUrl, question);
+
+  }
 }

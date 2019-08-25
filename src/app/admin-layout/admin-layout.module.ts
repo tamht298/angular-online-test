@@ -15,6 +15,8 @@ import { QuestionComponent } from './question/question.component';
 
 
 
+
+
 @NgModule({
   declarations: [HeaderComponent, SidebarComponent, AdminLayoutComponent, DashboardComponent, BreadcrumbsComponent, PageNotFoundComponent, CandidatesComponent, SearchPipe, QuestionComponent],
   imports: [
