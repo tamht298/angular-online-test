@@ -53,18 +53,25 @@ export class QuestionComponent implements OnInit {
   }
 
   addQuestion() {
-    
-    
-    if(this.selectedAnswerTF=='true'){
-      this.answer1 = new Answer(this.tfOptions[0].value, 1, true, false);
-      this.answer2 = new Answer(this.tfOptions[1].value, 2, false, false);
 
+    if(this.newQuestion.questionType.typeCode == 'TF'){
+      if(this.selectedAnswerTF==='true'){
+        this.answer1 = new Answer(this.tfOptions[0].value, 1, true, false);
+        this.answer2 = new Answer(this.tfOptions[1].value, 2, false, false);
+  
+      }
+      else if(this.selectedAnswerTF === 'false'){
+        this.answer1 = new Answer(this.tfOptions[0].value, 1, false, false);
+        this.answer2 = new Answer(this.tfOptions[1].value, 2, true, false);
+      }
+      this.newAnswers.push(this.answer1, this.answer2);
     }
-    else if(this.selectedAnswerTF == 'false'){
-      this.answer1 = new Answer(this.tfOptions[0].value, 1, false, false);
-      this.answer2 = new Answer(this.tfOptions[1].value, 2, true, false);
+    else if(this.newQuestion.questionType.typeCode == 'MC'){
+      
+      
     }
-    this.newAnswers.push(this.answer1, this.answer2);
+    
+    
     this.newQuestion.deleted = false;
     this.newQuestion.shuffle = this.isShuffle;
     this.newQuestion.questionAnswersList=this.newAnswers;
@@ -138,16 +145,29 @@ export class QuestionComponent implements OnInit {
     this.toastr.success(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
   }
   //define error toast
-  showError(title: string, message: string){
+    showError(title: string, message: string){
     this.toastr.error(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
   }
 
   //xoá answer
   deletedAnswer(index: number){
-    if(this.newAnswers.length>2)
-    this.newAnswers.splice(index, 1);
+    if(this.newAnswers.length>2){
+      this.newAnswers.splice(index, 1);
+      console.log(this.newAnswers.length)
+    }
+    
   }
   addFieldAnswer(){
-    this.newAnswers.push(new Answer('', this.newAnswers.length, false, false))
+  this.newAnswers.push(new Answer('', this.newAnswers[this.newAnswers.length-1].displayOrder+1, false, false));
+  console.log(this.newAnswers.length);
+  
+    
+  }
+  getChecked(){
+    //item.correct=!item.correct;
+    console.log(this.newAnswers);
+    
+    
+    
   }
 }
