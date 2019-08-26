@@ -177,7 +177,7 @@
                                                     
                                             </div>
                                     </ng-container>
-                                    <button type="button" class="btn btn-primary my-1" (click)="addFieldAnswer()"><i class="fa fa-plus-circle"></i>&nbsp;Thêm đáp án</button>
+                                    <button type="button" class="btn btn-primary my-1" (click)="addFieldAnswer(this.newAnswers)"><i class="fa fa-plus-circle"></i>&nbsp;Thêm đáp án</button>
 
                                 </div>
                                 <!-- True/False -->
@@ -323,13 +323,13 @@
                                                     
                                                     <input type="text" name="answer{{i+1}}" class="form-control" [(ngModel)]="answer.answerContent">
                                                     <div class="input-group-append" *ngIf="i>1">
-                                                            <span class="input-group-text"><i class="fa fa-times" aria-hidden="true" (click)="deletedAnswer(i)"></i></span>
+                                                            <span class="input-group-text"><i class="fa fa-times" aria-hidden="true" (click)="removeAnswer(i)"></i></span>
                                                     </div>
                                             </div>
                                                 
                                         </div>
                                 </ng-container>
-                                <button type="button" class="btn btn-primary my-1" (click)="addFieldAnswer()"><i class="fa fa-plus-circle"></i>&nbsp;Thêm đáp án</button>
+                                <button type="button" class="btn btn-primary my-1" (click)="addFieldAnswer(this.selectedAnswers)"><i class="fa fa-plus-circle"></i>&nbsp;Thêm đáp án</button>
 
                             </div>
                             <!-- True/False -->

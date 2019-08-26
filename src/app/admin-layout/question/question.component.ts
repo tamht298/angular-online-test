@@ -168,11 +168,15 @@ export class QuestionComponent implements OnInit {
     }
     
   }
-  addFieldAnswer(){
-  this.newAnswers.push(new Answer('', this.newAnswers[this.newAnswers.length-1].displayOrder+1, false, false));
-  console.log(this.newAnswers.length);
-  
-    
+  removeAnswer(index: number){
+    if(this.selectedAnswers.length>2){
+      this.selectedAnswers.splice(index, 1);
+      console.log(this.selectedAnswers.length)
+    }
+  }
+
+  addFieldAnswer(answer: any){
+    answer.push(new Answer('', answer[answer.length-1].displayOrder+1, false, false));
   }
   getEditType(){
     console.log(this.selectedTypeId);
