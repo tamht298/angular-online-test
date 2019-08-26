@@ -8,6 +8,7 @@ import {Subject} from 'src/app/models/subject';
 import {QuestionService} from 'src/app/services/question.service';
 import {Part} from 'src/app/models/part';
 import { ToastrService } from 'ngx-toastr';
+import { PartService } from 'src/app/services/part.service';
 
 
 
@@ -21,8 +22,8 @@ export class QuestionComponent implements OnInit {
   loading = false;
   answer1: Answer;
   answer2: Answer;
-  questionTypes: QuestionType[];
-  qType: any;
+  questionTypes: QuestionType[]=[];
+  qType: any={};
   newQuestion: any = {};
   questions: Question[]=[];
   subjects: Subject[];
@@ -31,10 +32,12 @@ export class QuestionComponent implements OnInit {
   TF: boolean = false;
   MC: boolean = false;
   selectedAnswerTF: any;
-  selectedQuestion: Question;
-  
+  selectedQuestion: any={};
+  selectedTypeId: number=-1;
+  selectedPartId: number=-1;
   parts: Part[];
   newAnswers: any[] = [];
+  selectedAnswers: any[]=[];
   tfOptions = [
     {id: 'true', value: 'Đúng'},
     {id: 'false', value: 'Sai'}
@@ -44,7 +47,8 @@ export class QuestionComponent implements OnInit {
     private questionTypeService: QuestiontypeService,
     private subjectSevice: SubjectService, 
     private questionService: QuestionService, 
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private partService: PartService
     
     ) {}
 
@@ -104,11 +108,15 @@ export class QuestionComponent implements OnInit {
 
   getPart() {
     //get đối tượng subject là selectedSubject
-    this.parts = this.selectedSubject.partList;
+    this.partService.getPartBySubjectId(this.selectedSubject.id).subscribe(data=>this.parts=data);
+    
+    
   }
   getType(){
 
     this.qType = this.newQuestion.questionType;
+    
+    
     switch(this.qType.typeCode){
       case 'TF':{
         this.TF=true;
@@ -122,11 +130,7 @@ export class QuestionComponent implements OnInit {
         this.TF=false;
         this.newAnswers.length=0;
         this.newAnswers.push(new Answer('', 1, false, false), new Answer('', 2, false, false));
-        
-        console.log(this.newAnswers);
-        
-        
-        
+
         break;
       }
     }
@@ -148,11 +152,11 @@ export class QuestionComponent implements OnInit {
   }
 
    //define successful toast
-   showSuccess(title: string, message: string) {
+  showSuccess(title: string, message: string) {
     this.toastr.success(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
   }
   //define error toast
-    showError(title: string, message: string){
+  showError(title: string, message: string){
     this.toastr.error(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
   }
 
@@ -170,23 +174,88 @@ export class QuestionComponent implements OnInit {
   
     
   }
+  getEditType(){
+    console.log(this.selectedTypeId);
+    this.questionTypeService.getTypeById(this.selectedTypeId).subscribe(data=>{
+      this.selectedQuestion.questionType=data;
+      switch(this.selectedQuestion.questionType.typeCode){
+        case 'TF':{
+          this.TF=true;
+          this.MC=false;
 
-  getSelected(q: Question){
-    this.selectedQuestion=q;
+          break;
+        }
+        case 'MC':{
+          this.MC=true;
+          this.TF=false;     
+          
+          this.selectedAnswers=this.selectedQuestion.questionAnswerList;  
+          break;
+        }
+          
+      }
+    })
+    
+  }
+  getSelected(id: number){
+
+    this.questionService.getQuestionById(id).subscribe(data=>{
+      this.selectedQuestion=data;
+      this.selectedTypeId=this.selectedQuestion.questionType.id;
+      this.selectedAnswers=this.selectedQuestion.questionAnswersList; 
+      this.selectedPartId=this.selectedQuestion.part.id;
+      
+      this.partService.getPartBySubjectId(this.selectedQuestion.part.subject.id).subscribe(data=>{
+        this.parts=data;
+        this.selectedSubject=this.selectedQuestion.part.subject;
+        
+      });
+      
+      
+      
+      switch(this.selectedQuestion.questionType.typeCode){
+        case 'TF':{
+          this.TF=true;
+          this.MC=false;
+          console.log(this.selectedAnswers);
+          
+          break;
+        }
+        case 'MC':{
+          this.MC=true;
+          this.TF=false;     
+          
+          //this.selectedAnswers=this.selectedQuestion.questionAnswerList;  
+          break;
+        }
+          
+      }
+    });
     
     
   }
   deletedQuestion(){
     this.selectedQuestion.deleted=true;
-    this.questionService.deleteQuestion(this.selectedQuestion).subscribe(data=>{
+    this.questionService.deleteQuestion(this.selectedQuestion).subscribe(()=>{
       
       this.loadQuestions();
       this.closeModalById('closeDeleteModal');
       this.showSuccess('Xoá thành công', 'Hoàn thành');
     }, error=>{
-      console.log(error);
-      
+      console.log(error);  
       this.showError('Xoá thất bại', 'Lỗi');
     })
   }
+  editQuestion(){
+    this.questionService.updateQuestion(this.selectedQuestion).subscribe(()=>{
+      this.loadQuestions();
+      this.closeModalById('closeEditModal');
+      this.showSuccess('Cập nhật thành công', 'Hoàn thành');
+    }, error=>{
+      console.log(error);     
+      this.showError('Cập nhật thất bại', 'Lỗi');
+    })
+    
+  }
+
 }

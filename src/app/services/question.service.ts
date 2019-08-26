@@ -18,7 +18,13 @@ export class QuestionService {
     return this.http.post<any>(this.baseUrl, question).pipe(map((data: any) => data.result));
   }
   deleteQuestion(question: Question): Observable<any>{
-    return this.http.put(this.baseUrl, question);
+    return this.http.put<Question>(this.baseUrl, question);
 
+  }
+  getQuestionById(id: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  }
+  updateQuestion(q: Question): Observable<any>{
+    return this.http.put<any>(this.baseUrl, q);
   }
 }

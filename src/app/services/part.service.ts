@@ -7,9 +7,15 @@ import { Observable } from 'rxjs';
 })
 export class PartService {
 
-  private baseUrl='';
+  private baseUrl='https://sv-web-trac-nghiem.herokuapp.com/api';
   constructor(private http: HttpClient) { }
   getParts(): Observable<any[]>{
     return this.http.get<any[]>(this.baseUrl);
+  }
+  getPartById(id: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/${id}`)
+  }
+  getPartBySubjectId(id: number): Observable<any[]>{
+    return this.http.get<any[]>(`${this.baseUrl}/${id}/parts`);
   }
 }
