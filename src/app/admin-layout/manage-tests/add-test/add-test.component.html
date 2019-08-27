@@ -1,0 +1,116 @@
+
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Danh sách câu hỏi</h3>
+                <ng-container *ngIf="loading">
+                    Đang tải dữ liệu
+                </ng-container>
+                
+                <div class="btn-list-questions d-flex align-items-end flex-column">
+                        <div class="input-group mt-auto">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                                
+                                </div>
+                                <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá ..." aria-label="Search" aria-describedby="basic-addon2">
+                            </div>
+                         
+                </div>
+                    <div class="list-questions" data-spy="scroll" style="height: 60vh; overflow-y: scroll">
+                    
+                        <ul class="list-group">
+                            <ng-container *ngFor="let q of questionList">
+                                <li class="list-group-item d-inline question-item">{{q.questionContent}}
+                                    <a href="#detail-question" data-toggle="modal">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </li>
+                                
+                            </ng-container>
+                        </ul>     
+                    </div>
+                
+    
+                
+            </div>
+            <div class="col-sm-6">
+                
+                <div class="row justify-content-end mr-1">
+                    <div class="col-sm-2">
+                        <button>Save</button>
+                    </div>
+                </div>
+                <div class="row" style="height: 30vh;background: indianred">
+                    
+                        
+                </div>
+                <div class="row" style="height: 70vh">
+                    <div class="col-sm-2" style="background: greenyellow"></div>
+                    <div class="col-sm-10" style="background: hotpink"></div>
+                </div>
+               
+                
+            </div>
+        </div>
+        <div id="detail-question" tabindex="-1" role="dialog" class="modal fade">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        
+                            <div class="modal-header">
+                                    <h4 class="modal-title">Chi tiết câu hỏi</h4>
+                                    
+                                </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                        <div class="col-sm-6">
+                                                <div class="form-row">
+                                                        <div class="col-sm-12">
+                                                            <label >Nội dung:</label>
+                                                            <label ></label>
+                                                        </div>                                
+                                                    </div>
+                                                    <div class="form-row">
+                                                            <div class="col-sm-12">
+                                                                <label >Điểm:</label>
+                                                                <label ></label>
+                                                            </div>                                
+                                                    </div>
+                                                    <div class="form-row">
+                                                            <div class="col-sm-12">
+                                                                <label >Độ khó:</label>
+                                                                <label ></label>
+                                                            
+                                                            </div>
+                                                    </div>                                
+                                        </div>
+                                        <div class="col-sm-6">
+                                                <div class="form-row">
+                                                        <div class="col-sm-12">
+                                                            <label >Đáp án:</label>
+                                                            <p class="text-success">đáp án 1</p>
+                                                            <p class="is-invalid">đáp án 1</p>
+                                                        </div>                                
+                                                </div>
+                                        </div>
+                                </div>
+                                
+                                
+                                
+                                
+                                       
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">
+                                <input type="submit" class="btn btn-primary" value="Lưu">
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+    </div>
+
+<!-- Info question -->
+

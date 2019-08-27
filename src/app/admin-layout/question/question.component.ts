@@ -33,15 +33,18 @@ export class QuestionComponent implements OnInit {
   MC: boolean = false;
   selectedAnswerTF: any;
   selectedQuestion: any={};
+  selectedCorrectAnswerId: number=-1;
   selectedTypeId: number=-1;
   selectedPartId: number=-1;
   parts: Part[];
   newAnswers: any[] = [];
-  selectedAnswers: any[]=[];
+  selectedAnswers: Answer[]=[];
   tfOptions = [
     {id: 'true', value: 'Đúng'},
     {id: 'false', value: 'Sai'}
-  ]
+  ];
+  p: Number = 1;
+  count: Number = 2;
 
   constructor(
     private questionTypeService: QuestiontypeService,
@@ -192,8 +195,12 @@ export class QuestionComponent implements OnInit {
         case 'MC':{
           this.MC=true;
           this.TF=false;     
+          this.selectedAnswers=this.selectedQuestion.questionAnswersList;
           
-          this.selectedAnswers=this.selectedQuestion.questionAnswerList;  
+          
+          // this.selectedAnswers.length=0;
+          // this.selectedAnswers.push(new Answer('', 1, false, false), new Answer('', 2, false, false));
+           
           break;
         }
           
@@ -209,19 +216,20 @@ export class QuestionComponent implements OnInit {
       this.selectedAnswers=this.selectedQuestion.questionAnswersList; 
       this.selectedPartId=this.selectedQuestion.part.id;
       
+      
+      this.selectedCorrectAnswerId=this.findCorrectAnswerId(this.selectedAnswers);
+      console.log(this.findCorrectAnswerId(this.selectedAnswers));
       this.partService.getPartBySubjectId(this.selectedQuestion.part.subject.id).subscribe(data=>{
         this.parts=data;
         this.selectedSubject=this.selectedQuestion.part.subject;
         
       });
-      
-      
-      
+ 
       switch(this.selectedQuestion.questionType.typeCode){
         case 'TF':{
           this.TF=true;
           this.MC=false;
-          console.log(this.selectedAnswers);
+          
           
           break;
         }
@@ -250,7 +258,9 @@ export class QuestionComponent implements OnInit {
       this.showError('Xoá thất bại', 'Lỗi');
     })
   }
-  editQuestion(){
+  editQuestion(f: object){
+    console.log(f);
+    this.selectedQuestion.questionAnswersList= this.selectedAnswers;
     this.questionService.updateQuestion(this.selectedQuestion).subscribe(()=>{
       this.loadQuestions();
       this.closeModalById('closeEditModal');
@@ -259,6 +269,17 @@ export class QuestionComponent implements OnInit {
       console.log(error);     
       this.showError('Cập nhật thất bại', 'Lỗi');
     })
+    
+  }
+  findCorrectAnswerId(array: any[]): number{
+    let id: number=-1;
+    array.forEach(item=>{
+      if(item.correct){
+        id=item.id;
+        
+      }
+    })
+    return id;
     
   }
 

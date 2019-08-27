@@ -12,13 +12,17 @@ import { FormsModule } from '@angular/forms';
 import { SearchPipe } from '../shared/search.pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { QuestionComponent } from './question/question.component';
+import { ManageTestsComponent } from './manage-tests/manage-tests.component';
+import { AddTestComponent } from './manage-tests/add-test/add-test.component';
+import { ListTestComponent } from './manage-tests/list-test/list-test.component';
+
 
 
 
 
 
 @NgModule({
-  declarations: [HeaderComponent, SidebarComponent, AdminLayoutComponent, DashboardComponent, BreadcrumbsComponent, PageNotFoundComponent, CandidatesComponent, SearchPipe, QuestionComponent],
+  declarations: [HeaderComponent, SidebarComponent, AdminLayoutComponent, DashboardComponent, BreadcrumbsComponent, PageNotFoundComponent, CandidatesComponent, SearchPipe, QuestionComponent, ManageTestsComponent, AddTestComponent, ListTestComponent],
   imports: [
     CommonModule,
     RouterModule,

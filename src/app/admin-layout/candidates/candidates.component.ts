@@ -4,8 +4,7 @@ import { Candidate } from 'src/app/models/candidate';
 import { CandidateService } from 'src/app/services/candidate.service';
 
 import { ToastrService } from 'ngx-toastr';
-import { Subject } from 'rxjs';
-import { timeout } from 'q';
+
 
 
 @Component({

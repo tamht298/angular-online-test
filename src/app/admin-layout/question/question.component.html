@@ -12,6 +12,12 @@
     <div class="row">
         <div class="col-sm-5">
             <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fa fa-search"></i>
+                    </span>
+                                
+                </div>
                 <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá ..." aria-label="Search" aria-describedby="basic-addon2">
             </div>
         </div>
@@ -40,7 +46,7 @@
                         <ng-container *ngIf="loading">
                                 <div>Loading...</div>
                             </ng-container>
-                            <tr *ngFor="let q of questions; let i= index">
+                            <tr *ngFor="let q of questions | paginate: { itemsPerPage: count, currentPage: p }; let i= index">
                                     <th scope="row">{{i+1}}</th>
                                     <td>{{q.questionContent}}</td>
                                     <td>{{q.point}}</td>
@@ -72,6 +78,10 @@
                 </tbody>
             </table>
     </div>
+    <!-- Paging  -->
+    <div class="text-right">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
 </div>
 
 
@@ -230,7 +240,7 @@
 <div id="editModal" tabindex="-1" role="dialog" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form name="addForm" #formAdd="ngForm" (ngSubmit)="editQuestion()" novalidate>
+            <form name="addForm" #formEdit="ngForm" (ngSubmit)="editQuestion(formEdit.value)" novalidate>
                     <div class="modal-header">
                         <h4 class="modal-title">Cập nhật câu hỏi</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -267,8 +277,6 @@
                                         <ng-container *ngFor="let part of parts">
                                                 <option value="{{part.id}}">{{part.partName}}</option>
                                         </ng-container>
-
-
                                     </select>
                                 </div>
                            </div>
@@ -285,7 +293,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Độ khó</label>
-                                    <select name="" id="" class="form-control" name="difficultyLevel" [(ngModel)]="selectedQuestion.difficultyLevel">
+                                    <select name="difficulty-level" id="" class="form-control" name="difficultyLevel" [(ngModel)]="selectedQuestion.difficultyLevel">
                                         
                                         <option value="1">Dễ</option>
                                         <option value="2">Trung bình</option>
@@ -325,8 +333,7 @@
                                                     <div class="input-group-append" *ngIf="i>1">
                                                             <span class="input-group-text"><i class="fa fa-times" aria-hidden="true" (click)="removeAnswer(i)"></i></span>
                                                     </div>
-                                            </div>
-                                                
+                                            </div>                               
                                         </div>
                                 </ng-container>
                                 <button type="button" class="btn btn-primary my-1" (click)="addFieldAnswer(this.selectedAnswers)"><i class="fa fa-plus-circle"></i>&nbsp;Thêm đáp án</button>
@@ -335,12 +342,17 @@
                             <!-- True/False -->
                             <div *ngIf="TF">
                                 <label class="mr-1">Đáp án</label>
-                                <div class="form-check form-check-inline"*ngFor="let option of selectedAnswers; let i = index" >
-
-                                        <input class="form-check-input" type="radio" name="radio-answer" id="radio-{{option.id}}" [checked]="option.correct">
-                                        <label class="form-check-label" for="radio-{{option.id}}">{{option.answerContent}}</label>
-                                       
-                                </div>
+                               
+                               
+                                <select name="answer-tf" class="form-control" [(ngModel)]="selectedCorrectAnswerId">
+                                    
+                                    <ng-container *ngFor="let answer of selectedAnswers">
+                                        <option [value]="answer.id" >{{answer.answerContent}}</option>
+                                    </ng-container>
+                                        
+                                    
+                                    
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -348,7 +360,6 @@
                             <input type="checkbox" name="shuffle" class="form-check-input" id="shuffle" [(ngModel)]="selectedQuestion.shuffle">
                             <label class="form-check-label" for="shuffle">Trộn đáp án?</label>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">

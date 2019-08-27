@@ -1,0 +1,15 @@
+#detail-question{
+    width: 80vw;
+    .question-item{
+        i{
+            display: none;
+            
+        }
+        &:hover{
+            i{
+                display: inline
+            }
+            
+        }
+    }
+}
