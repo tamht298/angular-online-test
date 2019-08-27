@@ -1,14 +1,14 @@
 
 <div class="container-fluid">
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-sm-6">
                 <h3>Danh sách câu hỏi</h3>
                 <ng-container *ngIf="loading">
                     Đang tải dữ liệu
                 </ng-container>
                 
-                <div class="btn-list-questions d-flex align-items-end flex-column">
-                        <div class="input-group mt-auto">
+                <div class="btn-list-questions d-flex align-items-end flex-column mb-5">
+                        <div class="input-group ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
                                         <i class="fa fa-search"></i>
@@ -24,8 +24,8 @@
                         <ul class="list-group">
                             <ng-container *ngFor="let q of questionList">
                                 <li class="list-group-item d-inline question-item">{{q.questionContent}}
-                                    <a href="#detail-question" data-toggle="modal">
-                                        <i class="fa fa-eye"></i>
+                                    <a href="#detail-question" class="icon-info" data-toggle="modal">
+                                        <i class="fa fa-eye" (click)="getSelectedQuestion(q.id)"></i>
                                     </a>
                                 </li>
                                 
@@ -68,30 +68,67 @@
                                         <div class="col-sm-6">
                                                 <div class="form-row">
                                                         <div class="col-sm-12">
-                                                            <label >Nội dung:</label>
-                                                            <label ></label>
+                                                            <label >Nội dung: </label>
+                                                            <b >{{selectedQuestion.questionContent}}</b>
+                                                            
                                                         </div>                                
                                                     </div>
                                                     <div class="form-row">
                                                             <div class="col-sm-12">
-                                                                <label >Điểm:</label>
-                                                                <label ></label>
+                                                                <label >Điểm: </label>
+                                                                <label>{{selectedQuestion.point}}</label>
                                                             </div>                                
                                                     </div>
                                                     <div class="form-row">
                                                             <div class="col-sm-12">
-                                                                <label >Độ khó:</label>
-                                                                <label ></label>
+                                                                <label >Độ khó: </label>
+                                                                <label [ngSwitch]="selectedQuestion.difficultyLevel">
+                                                                        <label class="badge badge-success" *ngSwitchCase="1">
+                                                                        Dễ
+                                                                        </label>
+                                                                        <label class="badge badge-warning" *ngSwitchCase="2">
+                                                                        Trung bình
+                                                                        </label>
+                                                                        <label class="badge badge-danger" *ngSwitchDefault>
+                                                                        Khó
+                                                                        </label>
+                                                                </label>
+                                                                
                                                             
                                                             </div>
-                                                    </div>                                
+                                                    </div>
+                                                    <div class="form-row">
+                                                            <div class="col-sm-12">
+                                                                <label >Kiểu câu hỏi:</label>
+                                                                <label >{{selectedType.name}}</label>
+                                                            
+                                                            </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                            <div class="col-sm-12">
+                                                                <label >Môn học:</label>
+                                                                <label >{{selectedSubject.subjectName}}</label>
+                                                            
+                                                            </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                            <div class="col-sm-12">
+                                                                <label >Phần:</label>
+                                                                <label >{{selectedPart.partName}}</label>
+                                                            
+                                                            </div>
+                                                    </div>                              
                                         </div>
                                         <div class="col-sm-6">
                                                 <div class="form-row">
                                                         <div class="col-sm-12">
                                                             <label >Đáp án:</label>
-                                                            <p class="text-success">đáp án 1</p>
-                                                            <p class="is-invalid">đáp án 1</p>
+                                                            <ng-container  *ngFor="let answer of selectedAnswers">
+                                                                <p [ngClass]="{'text-success font-weight-bold': answer.correct, 'text-secondary': !answer.correct}">{{answer.answerContent}}</p>
+                                                            </ng-container>
+                                                            
+                                                            
+                                                            
                                                         </div>                                
                                                 </div>
                                         </div>
@@ -112,5 +149,5 @@
             </div>
     </div>
 
-<!-- Info question -->
+    <ngx-loading-bar></ngx-loading-bar>
 

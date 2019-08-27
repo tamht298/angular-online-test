@@ -1,12 +1,12 @@
 #detail-question{
     width: 80vw;
-    .question-item{
-        i{
+    .list-group-item .d-inline .question-item{
+        .icon-info{
             display: none;
             
         }
         &:hover{
-            i{
+            .icon-info{
                 display: inline
             }
             

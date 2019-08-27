@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TestsService } from 'src/app/services/tests.service';
 import { QuestionService } from 'src/app/services/question.service';
+import { QuestionType } from 'src/app/models/question_type';
 
 @Component({
   selector: 'app-add-test',
@@ -12,6 +13,11 @@ export class AddTestComponent implements OnInit {
   listTest: any=[];
   questionList: any=[];
   loading: boolean=false;
+  selectedQuestion: any={};
+  selectedPart: any={};
+  selectedSubject: any={};
+  selectedAnswers: any=[];
+  selectedType: any={};
   constructor(private testService: TestsService, private questionService: QuestionService) { }
 
   ngOnInit() {
@@ -30,5 +36,19 @@ export class AddTestComponent implements OnInit {
       this.questionList=data;
     })
   }
+
+  //lấy đối tượng câu hỏi được chọn qua id
+  getSelectedQuestion(id: number){
+    this.questionService.getQuestionById(id).subscribe(data=>{
+      this.selectedQuestion=data;
+      this.selectedPart=data.part;
+      this.selectedSubject=this.selectedPart.subject;
+      this.selectedAnswers=this.selectedQuestion.questionAnswersList;
+      this.selectedType=this.selectedQuestion.questionType;
+      console.log(this.selectedType);
+      
+    })
+  }
+
 
 }
