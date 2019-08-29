@@ -1,24 +1,30 @@
-<div class="row" style="margin-bottom: 0.5 rem">
-        <div class="col-sm-10">
-            <h2>Quản lý bài kiểm tra</h2>
-        </div>
-        <div class="col-sm-2">
-            
-            <a routerLink="../add-test" class="btn btn-outline-primary" data-toggle="modal"><i class="fa fa-plus"></i>
-                <span> Thêm mới</span></a> &nbsp;
-        </div>
+<div class="row mb-4">
+    <div class="col-sm-8">
+        <h2>Quản lý bài kiểm tra</h2>
     </div>
-    <div class="row">
-        <div class="col-sm-5">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="fa fa-search"></i>
-                    </span>
-                                
-                </div>
-                <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá ..." aria-label="Search" aria-describedby="basic-addon2">
+    <div class="col-sm-4">
+        <div class="form-row justify-content-end">
+            <div class="form-group">
+                <a routerLink="../add-test" class="btn btn-outline-primary" data-toggle="modal"><i
+                        class="fa fa-plus"></i>
+                    <span> Thêm mới</span></a> &nbsp;
             </div>
         </div>
+
     </div>
-    <ngx-loading-bar></ngx-loading-bar>
+</div>
+<div class="row">
+    <div class="col-sm-5">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fa fa-search"></i>
+                </span>
+
+            </div>
+            <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá ..."
+                aria-label="Search" aria-describedby="basic-addon2">
+        </div>
+    </div>
+</div>
+<ngx-loading-bar></ngx-loading-bar>

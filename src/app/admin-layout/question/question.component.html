@@ -1,12 +1,16 @@
 
 <div class="container-fluid">
-    <div class="row" style="margin-bottom: 0.5 rem">
-        <div class="col-sm-10">
+    <div class="row mb-4">
+        <div class="col-sm-8">
             <h2>Ngân hàng câu hỏi</h2>
         </div>
-        <div class="col-sm-2">
-            <a href="#addModal" class="btn btn-outline-primary" data-toggle="modal"><i class="fa fa-plus"></i>
-                <span> Thêm mới</span></a> &nbsp;
+        <div class="col-sm-4">
+            <div class="form-row justify-content-end">
+                <a href="#addModal" class="btn btn-outline-primary" data-toggle="modal"><i class="fa fa-plus"></i>
+                    <span> Thêm mới</span>
+                </a>
+            </div>
+            
         </div>
     </div>
     <div class="row">
@@ -238,7 +242,7 @@
     </div>
 <!-- Edit Modal HTML -->
 <div id="editModal" tabindex="-1" role="dialog" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form name="addForm" #formEdit="ngForm" (ngSubmit)="editQuestion(formEdit.value)" novalidate>
                     <div class="modal-header">
@@ -348,10 +352,7 @@
                                     
                                     <ng-container *ngFor="let answer of selectedAnswers">
                                         <option [value]="answer.id" >{{answer.answerContent}}</option>
-                                    </ng-container>
-                                        
-                                    
-                                    
+                                    </ng-container>  
                                 </select>
                             </div>
                         </div>

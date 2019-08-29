@@ -2,6 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { TestsService } from 'src/app/services/tests.service';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuestionType } from 'src/app/models/question_type';
+import { SubjectService } from 'src/app/services/subject.service';
+import { Subject } from '../../../models/subject';
+import { PartService } from 'src/app/services/part.service';
+import { Question } from 'src/app/models/question';
+import { Tests } from 'src/app/models/tests';
+import { ClassesService } from '../../../services/classes.service';
+import { Classes } from '../../../models/classes';
 
 @Component({
   selector: 'app-add-test',
@@ -18,37 +25,84 @@ export class AddTestComponent implements OnInit {
   selectedSubject: any={};
   selectedAnswers: any=[];
   selectedType: any={};
-  constructor(private testService: TestsService, private questionService: QuestionService) { }
+  subjects: Subject;
+  parts: any=[];
+  selectedSubjectTest: any={};
+  selectedPartTest: any={};
+  newTest: any={};
+  classes: Classes[]=[];
+  constructor(private testService: TestsService, 
+    private questionService: QuestionService,
+    private subjectService: SubjectService,
+    private partService: PartService,
+    private classesservice: ClassesService) { }
 
   ngOnInit() {
     this.loadQuestion();
+    this.loadSubjects();
+    this.loadClasses();
   }
-  loadTests(){
-    this.loading=true;
-    this.testService.getTests().subscribe(data=>{
-      
-      this.listTest=data;
-      this.loading=false;
-    })
-  }
+
   loadQuestion(){
     this.questionService.getQuestions().subscribe(data=>{
-      this.questionList=data;
+      this.questionList=data.filter(item=>!item.deleted);
     })
+  }
+
+  loadSubjects() {
+    this.subjectService.getSubject().subscribe(data => {
+      this.subjects = data;
+    });
   }
 
   //lấy đối tượng câu hỏi được chọn qua id
   getSelectedQuestion(id: number){
+
     this.questionService.getQuestionById(id).subscribe(data=>{
       this.selectedQuestion=data;
       this.selectedPart=data.part;
       this.selectedSubject=this.selectedPart.subject;
       this.selectedAnswers=this.selectedQuestion.questionAnswersList;
-      this.selectedType=this.selectedQuestion.questionType;
-      console.log(this.selectedType);
-      
+      this.selectedType=this.selectedQuestion.questionType;  
     })
   }
 
+  //lấy part theo subject được chọn (selectedSubject)
+  getPart(){
+    this.partService.getPartBySubjectId(this.selectedSubjectTest.id).subscribe(data=>this.parts=data);
+  }
+  //thêm câu hỏi vào bài test
+  addTestList(q: Question){
+    let index = this.questionList.findIndex(item=>item.id===q.id); 
+    this.questionList.splice(index, 1);
+    this.listTest.push(q);
+  }
 
+  //xoá câu hỏi bài test
+  removeTestList(q: Question){
+    let index = this.listTest.findIndex(item=>item.id===q.id);  
+    this.listTest.splice(index, 1);
+    this.questionList.push(q);
+  }
+
+  //tạo bài test
+  createTest(){
+    this.newTest.questionList=this.listTest;
+    this.newTest.deleted=false;
+    this.newTest.dateTimeTest= '2019-08-28 10:02:35';
+    console.log(this.newTest);
+   
+    
+    this.testService.createTest(this.newTest).subscribe(()=>{
+      console.log('thành công');
+      
+    })
+  }
+  loadClasses(){
+    this.classesservice.getClasses().subscribe(data=>{
+      this.classes=data;
+      console.log(this.classes);
+      
+    })
+  }
 }

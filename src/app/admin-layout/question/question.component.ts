@@ -48,7 +48,7 @@ export class QuestionComponent implements OnInit {
 
   constructor(
     private questionTypeService: QuestiontypeService,
-    private subjectSevice: SubjectService, 
+    private subjectService: SubjectService, 
     private questionService: QuestionService, 
     private toastr: ToastrService,
     private partService: PartService
@@ -106,14 +106,13 @@ export class QuestionComponent implements OnInit {
   }
 
   loadSubjects() {
-    this.subjectSevice.getSubject().subscribe(data => this.subjects = data);
+    this.subjectService.getSubject().subscribe(data => this.subjects = data);
   }
 
   getPart() {
     //get đối tượng subject là selectedSubject
     this.partService.getPartBySubjectId(this.selectedSubject.id).subscribe(data=>this.parts=data);
-    
-    
+
   }
   getType(){
 

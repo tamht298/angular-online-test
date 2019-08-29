@@ -1,11 +1,15 @@
 <div class="container-fluid">
-    <div class="row" style="margin-bottom: 0.5 rem">
-        <div class="col-sm-10">
+    <div class="row mb-4">
+        <div class="col-sm-8">
             <h2>Quản lý sinh viên</h2>
         </div>
-        <div class="col-sm-2">
-            <a href="#addCandidateModal" class="btn btn-outline-primary" data-toggle="modal"><i class="fa fa-plus"></i>
-                <span> Thêm mới</span></a> &nbsp;
+        <div class="col-sm-4">
+            <div class="form-row justify-content-end">
+                <a href="#addCandidateModal" class="btn btn-outline-primary" data-toggle="modal"><i
+                        class="fa fa-plus"></i>
+                    <span> Thêm mới</span></a>
+            </div>
+
         </div>
     </div>
     <div class="row">
@@ -15,9 +19,10 @@
                     <span class="input-group-text">
                         <i class="fa fa-search"></i>
                     </span>
-                                        
+
                 </div>
-                <input name="searchCandidates" type="text" [(ngModel)]="searchText" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                <input name="searchCandidates" type="text" [(ngModel)]="searchText" class="form-control"
+                    placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
             </div>
         </div>
     </div>
@@ -39,62 +44,65 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngIf="loading">
-                    <div>Loading...</div>
-                </ng-container>
-
-                <ng-container *ngFor="let candidate of candidates | paginate: { itemsPerPage: count, currentPage: p } | searchFilter:searchText;let i = index">
+                <ng-container
+                    *ngFor="let candidate of candidates | paginate: { itemsPerPage: count, currentPage: p } | searchFilter:searchText;let i = index">
                     <tr>
                         <th scope="row">{{i+1}}</th>
                         <td>{{candidate.lastName}}</td>
                         <td>{{candidate.firstName}}</td>
-                        
+
                         <td>{{candidate.gender}}</td>
                         <td>{{candidate.phone}}</td>
                         <td>{{candidate.email}}</td>
                         <td>
-                            <a href="#editCandidateModal" class="btn btn-primary" data-toggle="modal" (click)="getSelectedId(candidate.id)"><i
-                            class="fa fa-pen"></i></a>&nbsp;
-                            <a href="#deleteCandidateModal" class="btn btn-danger" data-toggle="modal" (click)="getSelectedId(candidate.id)"><i
-                            class="fa fa-trash"></i></a>
+                            <a href="#editCandidateModal" class="btn btn-primary" data-toggle="modal"
+                                (click)="getSelectedId(candidate.id)"><i class="fa fa-pen"></i></a>&nbsp;
+                            <a href="#deleteCandidateModal" class="btn btn-danger" data-toggle="modal"
+                                (click)="getSelectedId(candidate.id)"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 </ng-container>
             </tbody>
         </table>
-        
+
     </div>
     <!-- Paging  -->
     <div class="text-right">
         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-      </div>
+    </div>
 </div>
 <!--  -->
 <!-- Add Modal HTML -->
 <div id="addCandidateModal" tabindex="-1" role="dialog" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form name="addForm" (ngSubmit)="addCandidate()" #form="ngForm" novalidate>
-                    <div class="modal-header">
-                        <h4 class="modal-title">Thêm sinh viên</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
+                <div class="modal-header">
+                    <h4 class="modal-title">Thêm sinh viên</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
                 <div class="modal-body">
                     <div class="form-row">
-                            <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Họ</label>
-                                        <input type="text" pattern="[a-zA-Z]*" placeholder="Last name" class="form-control" #newLastName="ngModel" ngModel name="newLastName" [(ngModel)]="newCandidate.lastName" required>
-                                        <div *ngIf="newLastName.invalid && (newLastName.dirty || newLastName.touched)" class="text text-danger">
-                                            Họ là bắt buộc!
-                                        </div>
-                                    </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Họ</label>
+                                <input type="text" pattern="[a-zA-Z]*" placeholder="Last name" class="form-control"
+                                    #newLastName="ngModel" ngModel name="newLastName"
+                                    [(ngModel)]="newCandidate.lastName" required>
+                                <div *ngIf="newLastName.invalid && (newLastName.dirty || newLastName.touched)"
+                                    class="text text-danger">
+                                    Họ là bắt buộc!
                                 </div>
+                            </div>
+                        </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tên</label>
-                                <input type="text" pattern="[a-zA-Z]*" placeholder="First name" class="form-control" #newFirstName="ngModel" ngModel name="newFirstName" [(ngModel)]="newCandidate.firstName" required>
-                                <div *ngIf="newFirstName.invalid && (newFirstName.dirty || newFirstName.touched)" class="text text-danger">
+                                <input type="text" pattern="[a-zA-Z]*" placeholder="First name" class="form-control"
+                                    #newFirstName="ngModel" ngModel name="newFirstName"
+                                    [(ngModel)]="newCandidate.firstName" required>
+                                <div *ngIf="newFirstName.invalid && (newFirstName.dirty || newFirstName.touched)"
+                                    class="text text-danger">
                                     <div *ngIf="newFirstName?.errors.required">
                                         Tên là bắt buộc!
                                     </div>
@@ -104,11 +112,13 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="Email" class="form-control" #newEmail="ngModel" ngModel name="newEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" [(ngModel)]="newCandidate.email" required>
+                        <input type="email" placeholder="Email" class="form-control" #newEmail="ngModel" ngModel
+                            name="newEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                            [(ngModel)]="newCandidate.email" required>
                         <div *ngIf="newEmail.touched" class="text text-danger">
                             <div *ngIf="newEmail?.errors?.required">Email là bắt buộc!</div>
                             <div *ngIf="newEmail?.errors?.pattern">Email không hợp lệ!</div>
@@ -120,8 +130,11 @@
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label>Điện thoại</label>
-                                <input type="text" placeholder="Phone number" pattern="^0[0-9]*" class="form-control" ngModel name="newPhone" #newPhone="ngModel" [(ngModel)]="newCandidate.phone" required maxlength="11" minlength="10">
-                                <div *ngIf="newPhone.invalid && (newPhone.dirty || newPhone.touched)" class="text text-danger">
+                                <input type="text" placeholder="Phone number" pattern="^0[0-9]*" class="form-control"
+                                    ngModel name="newPhone" #newPhone="ngModel" [(ngModel)]="newCandidate.phone"
+                                    required maxlength="11" minlength="10">
+                                <div *ngIf="newPhone.invalid && (newPhone.dirty || newPhone.touched)"
+                                    class="text text-danger">
                                     <div *ngIf="newPhone?.errors.required">
                                         Số điện thoại là bắt buộc!
                                     </div>
@@ -137,13 +150,15 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="newgender">Giới tính</label>
-                                <select class="custom-select" #newgender="ngModel" id="newgender" ngModel name="newgender" [(ngModel)]="newCandidate.gender" required>
-                                        
-                                        <option value="MALE" selected>Nam</option>
-                                        <option value="FEMALE">Nữ</option>
-                                    
-                                    </select>
-                                <div *ngIf="newgender.invalid && (newgender.dirty || newgender.touched)" class="text text-danger">
+                                <select class="custom-select" #newgender="ngModel" id="newgender" ngModel
+                                    name="newgender" [(ngModel)]="newCandidate.gender" required>
+
+                                    <option value="MALE" selected>Nam</option>
+                                    <option value="FEMALE">Nữ</option>
+
+                                </select>
+                                <div *ngIf="newgender.invalid && (newgender.dirty || newgender.touched)"
+                                    class="text text-danger">
                                     <div *ngIf="newgender?.errors.required">
                                         Giới tính là bắt buộc!
                                     </div>
@@ -164,7 +179,7 @@
 </div>
 <!-- Edit Modal HTML -->
 <div id="editCandidateModal" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form (ngSubmit)="editCandidate()" #formEditCandidate="ngForm">
                 <div class="modal-header">
@@ -176,8 +191,11 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tên</label>
-                                <input type="text" pattern="[a-zA-Z]*" placeholder="First name" class="form-control" #editFirstName="ngModel" ngModel name="editFirstName" [(ngModel)]="selectedCandidate.firstName" required>
-                                <div *ngIf="editFirstName.invalid && (editFirstName.dirty || editFirstName.touched)" class="text text-danger">
+                                <input type="text" pattern="[a-zA-Z]*" placeholder="First name" class="form-control"
+                                    #editFirstName="ngModel" ngModel name="editFirstName"
+                                    [(ngModel)]="selectedCandidate.firstName" required>
+                                <div *ngIf="editFirstName.invalid && (editFirstName.dirty || editFirstName.touched)"
+                                    class="text text-danger">
                                     <div *ngIf="editFirstName?.errors.required">
                                         Tên là bắt buộc!
                                     </div>
@@ -187,8 +205,11 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Họ</label>
-                                <input type="text" pattern="[a-zA-Z]*" placeholder="Last name" class="form-control" #editLastName="ngModel" ngModel name="editLastName" [(ngModel)]="selectedCandidate.lastName" required>
-                                <div *ngIf="editLastName.invalid && (editLastName.dirty || editLastName.touched)" class="text text-danger">
+                                <input type="text" pattern="[a-zA-Z]*" placeholder="Last name" class="form-control"
+                                    #editLastName="ngModel" ngModel name="editLastName"
+                                    [(ngModel)]="selectedCandidate.lastName" required>
+                                <div *ngIf="editLastName.invalid && (editLastName.dirty || editLastName.touched)"
+                                    class="text text-danger">
                                     <div *ngIf="editLastName?.errors.required">
                                         Họ là bắt buộc!
                                     </div>
@@ -199,7 +220,9 @@
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="Email" class="form-control" #editEmail="ngModel" ngModel name="editEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" [(ngModel)]="selectedCandidate.email" required>
+                        <input type="email" placeholder="Email" class="form-control" #editEmail="ngModel" ngModel
+                            name="editEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                            [(ngModel)]="selectedCandidate.email" required>
                         <div *ngIf="editEmail.touched" class="text text-danger">
                             <div *ngIf="editEmail?.errors?.required">Email là bắt buộc!</div>
                             <div *ngIf="editEmail?.errors?.pattern">Email không hợp lệ!</div>
@@ -210,8 +233,11 @@
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label>Điện thoại</label>
-                                <input type="text" placeholder="Phone number" class="form-control" pattern="^0[0-9]*" #editPhone="ngModel" ngModel name="editPhone" [(ngModel)]="selectedCandidate.phone" required maxlength="11" minlength="10">
-                                <div *ngIf="editPhone.invalid && (editPhone.dirty || editPhone.touched)" class="text text-danger">
+                                <input type="tel" placeholder="Phone number" class="form-control" pattern="^0[0-9]*"
+                                    #editPhone="ngModel" ngModel name="editPhone" [(ngModel)]="selectedCandidate.phone"
+                                    required maxlength="11" minlength="10">
+                                <div *ngIf="editPhone.invalid && (editPhone.dirty || editPhone.touched)"
+                                    class="text text-danger">
                                     <div *ngIf="editPhone?.errors.required">
                                         Số điện thoại là bắt buộc!
                                     </div>
@@ -227,12 +253,14 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="editGender">Giới tính</label>
-                                <select class="form-control" id="editGender" #editGender="ngModel" ngModel name="editGender" [(ngModel)]="selectedCandidate.gender" required>
-                                        
-                                        <option value="MALE">Nam</option>
-                                        <option value="FEMALE">Nữ</option>
-                                        </select>
-                                <div *ngIf="editGender.invalid && (editGender.dirty || editGender.touched)" class="text text-danger">
+                                <select class="form-control" id="editGender" #editGender="ngModel" ngModel
+                                    name="editGender" [(ngModel)]="selectedCandidate.gender" required>
+
+                                    <option value="MALE">Nam</option>
+                                    <option value="FEMALE">Nữ</option>
+                                </select>
+                                <div *ngIf="editGender.invalid && (editGender.dirty || editGender.touched)"
+                                    class="text text-danger">
                                     <div *ngIf="editGender?.errors.required">
                                         Giới tính là bắt buộc!
                                     </div>
@@ -245,7 +273,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">
-                    <input type="submit" class="btn btn-info" value="Lưu" >
+                    <input type="submit" class="btn btn-info" value="Lưu">
                 </div>
             </form>
         </div>
@@ -263,7 +291,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Bạn có thực sự muốn xoá sinh viên này?</p>
-                   
+
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="closeDeleteModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">

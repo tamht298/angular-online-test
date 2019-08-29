@@ -4,10 +4,13 @@ export class Tests{
     testTitle:string;
     testTime: number
     deleted: boolean;
+    dateTimeTest: Date;
     questionList: Question[];
-    constructor(testTitle: string, testTime: number, deleted: boolean, questionList: Question[]){
+    constructor(testTitle: string, testTime: number, deleted: boolean, dateTimeTest: Date, questionList: Question[]){
         this.testTitle=testTitle;
         this.testTime=testTime;
         this.deleted=deleted;
+        this.dateTimeTest=dateTimeTest;
+        this.questionList=questionList
     }
 }

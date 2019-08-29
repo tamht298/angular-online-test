@@ -1,15 +1,21 @@
-#detail-question{
-    width: 80vw;
-    .list-group-item .d-inline .question-item{
+.list-question {
+    .icon-info{
+        display: none;
+    }
+    &:hover{
         .icon-info{
-            display: none;
-            
-        }
-        &:hover{
-            .icon-info{
-                display: inline
-            }
-            
+            display: inline-block
         }
     }
 }
+.list-test-question{
+    .icon-info{
+        display: none;
+    }
+    &:hover{
+        .icon-info{
+            display: inline-block
+        }
+    }
+}
+
