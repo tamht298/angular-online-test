@@ -8,9 +8,12 @@ import { Tests } from '../models/tests';
 })
 export class TestsService {
 
-  private baseUrl='https://sv-web-trac-nghiem.herokuapp.com/api/tests';
-  constructor(private http: HttpClient) { }
-  getTests(): Observable<any[]>{
+  private baseUrl = 'https://sv-web-trac-nghiem.herokuapp.com/api/tests';
+
+  constructor(private http: HttpClient) {
+  }
+
+  getTests(): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl);
   }
   createTest(t: Tests): Observable<Tests>{

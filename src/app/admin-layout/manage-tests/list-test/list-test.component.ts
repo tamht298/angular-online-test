@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { TestsService } from 'src/app/services/tests.service';
+import {Component, OnInit} from '@angular/core';
+import {TestsService} from 'src/app/services/tests.service';
 
 @Component({
   selector: 'app-list-test',
@@ -8,16 +8,19 @@ import { TestsService } from 'src/app/services/tests.service';
 })
 export class ListTestComponent implements OnInit {
 
-  listTest: any=[];
-  constructor(private testService: TestsService) { }
+  listTest: any = [];
+
+  constructor(private testService: TestsService) {
+  }
 
   ngOnInit() {
     this.loadTests();
   }
-  loadTests(){
-    this.testService.getTests().subscribe(data=>{
-      this.listTest=data;
-    })
+
+  loadTests() {
+    this.testService.getTests().subscribe(data => {
+      this.listTest = data;
+    });
   }
 
 }

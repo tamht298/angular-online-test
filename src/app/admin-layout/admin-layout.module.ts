@@ -17,6 +17,7 @@ import { AddTestComponent } from './manage-tests/add-test/add-test.component';
 import { ListTestComponent } from './manage-tests/list-test/list-test.component';
 
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import {DataTablesModule} from 'angular-datatables';
 
 
 
@@ -28,7 +29,8 @@ import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
     RouterModule,
     FormsModule,
     NgxPaginationModule,
-    LoadingBarHttpClientModule
+    LoadingBarHttpClientModule,
+    DataTablesModule
   ],
   exports: [AdminLayoutComponent]
 })

@@ -30,7 +30,7 @@
 <br>
 <div class="col-sm-12">
     <div class="table-responsive-md">
-        <table class="table table-striped table-hover">
+        <table datatable class="table table-striped table-hover">
 
             <thead>
                 <tr>
@@ -67,9 +67,9 @@
 
     </div>
     <!-- Paging  -->
-    <div class="text-right">
-        <pagination-controls (pageChange)="p = $event"></pagination-controls>
-    </div>
+<!--    <div class="text-right">-->
+<!--        <pagination-controls (pageChange)="p = $event"></pagination-controls>-->
+<!--      </div>-->
 </div>
 <!--  -->
 <!-- Add Modal HTML -->
@@ -150,15 +150,13 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="newgender">Giới tính</label>
-                                <select class="custom-select" #newgender="ngModel" id="newgender" ngModel
-                                    name="newgender" [(ngModel)]="newCandidate.gender" required>
+                                <select class="custom-select" #newgender="ngModel" id="newgender" ngModel name="newgender" [(ngModel)]="newCandidate.gender" required>
 
-                                    <option value="MALE" selected>Nam</option>
-                                    <option value="FEMALE">Nữ</option>
+                                        <option value="MALE" selected>Nam</option>
+                                        <option value="FEMALE">Nữ</option>
 
-                                </select>
-                                <div *ngIf="newgender.invalid && (newgender.dirty || newgender.touched)"
-                                    class="text text-danger">
+                                    </select>
+                                <div *ngIf="newgender.invalid && (newgender.dirty || newgender.touched)" class="text text-danger">
                                     <div *ngIf="newgender?.errors.required">
                                         Giới tính là bắt buộc!
                                     </div>
@@ -253,14 +251,12 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="editGender">Giới tính</label>
-                                <select class="form-control" id="editGender" #editGender="ngModel" ngModel
-                                    name="editGender" [(ngModel)]="selectedCandidate.gender" required>
+                                <select class="form-control" id="editGender" #editGender="ngModel" ngModel name="editGender" [(ngModel)]="selectedCandidate.gender" required>
 
-                                    <option value="MALE">Nam</option>
-                                    <option value="FEMALE">Nữ</option>
-                                </select>
-                                <div *ngIf="editGender.invalid && (editGender.dirty || editGender.touched)"
-                                    class="text text-danger">
+                                        <option value="MALE">Nam</option>
+                                        <option value="FEMALE">Nữ</option>
+                                        </select>
+                                <div *ngIf="editGender.invalid && (editGender.dirty || editGender.touched)" class="text text-danger">
                                     <div *ngIf="editGender?.errors.required">
                                         Giới tính là bắt buộc!
                                     </div>
