@@ -29,13 +29,15 @@ export class AddTestComponent implements OnInit {
   parts: any=[];
   selectedSubjectTest: any={};
   selectedPartTest: any={};
-  newTest: any={};
+  newTest: Tests = new Tests();
   classes: Classes[]=[];
+  
+  classSelected: Classes[] = [];
   constructor(private testService: TestsService, 
     private questionService: QuestionService,
     private subjectService: SubjectService,
     private partService: PartService,
-    private classesservice: ClassesService) { }
+    private classesService: ClassesService) { }
 
   ngOnInit() {
     this.loadQuestion();
@@ -54,6 +56,7 @@ export class AddTestComponent implements OnInit {
       this.subjects = data;
     });
   }
+
 
   //lấy đối tượng câu hỏi được chọn qua id
   getSelectedQuestion(id: number){
@@ -89,20 +92,39 @@ export class AddTestComponent implements OnInit {
   createTest(){
     this.newTest.questionList=this.listTest;
     this.newTest.deleted=false;
-    this.newTest.dateTimeTest= '2019-08-28 10:02:35';
+    this.newTest.dateTimeTest='2019-08-28 10:02:35';
     console.log(this.newTest);
    
     
-    this.testService.createTest(this.newTest).subscribe(()=>{
-      console.log('thành công');
+    // this.testService.createTest(this.newTest).subscribe(()=>{
+    //   console.log('thành công');
       
-    })
+    // })
   }
+
+  //load dữ liệu của lớp
   loadClasses(){
-    this.classesservice.getClasses().subscribe(data=>{
+    this.classesService.getClasses().subscribe(data=>{
       this.classes=data;
       console.log(this.classes);
       
     })
+  }
+  onChange(c: Classes, isChecked: boolean){
+    if(isChecked){
+      this.classSelected.push(c)
+    }
+    else{
+      let index = this.classSelected.indexOf(c);
+      this.classSelected.splice(index, 1);
+    }
+
+  }
+
+  //Lấy danh sách lớp được chọn đổ lên text area
+  onClassSelected(){
+    this.newTest.classeSet=this.classSelected;
+    
+    
   }
 }

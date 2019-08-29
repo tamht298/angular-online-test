@@ -24,24 +24,18 @@ export class CandidatesComponent implements OnInit {
   candidate: Candidate;
   selectedId: number;
   searchText="";
-
-  p: Number = 1;
-  count: Number = 2;
   
- 
+  dtOptions: DataTables.Settings = {};
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
     
    }
-
-   
-
   ngOnInit() {  
   
     this.loadData();
-   
+    this.dtOptions = {
+      pagingType: 'full_numbers'
+    };
   }
-
-
 
   loadData(){
     this.loading=true;

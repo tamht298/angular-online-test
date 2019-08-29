@@ -27,83 +27,98 @@
                             <a href="#detail-question" class="icon-info" data-toggle="modal">
                                 <i class="fa fa-eye" (click)="getSelectedQuestion(q.id)"></i>
                             </a>
-                            
+
                         </li>
 
                     </ng-container>
                 </ul>
             </div>
-            
+
         </div>
         <div class="col-sm-6">
             <form (ngSubmit)="createTest()">
                 <div class="form-row justify-content-end">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary" role="button"><i class="fa fa-plus-circle"></i>&nbsp;Tạo bài kiểm tra</button>
+                        <button type="submit" class="btn btn-primary" role="button"><i
+                                class="fa fa-plus-circle"></i>&nbsp;Tạo bài kiểm tra</button>
 
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
                         <label for="test-title">Tiêu đề</label>
-                        <input type="email" class="form-control" name="test-title" placeholder="Nhập tiêu đề" [(ngModel)]="newTest.testTitle">
+                        <input type="email" class="form-control" name="test-title" placeholder="Nhập tiêu đề"
+                            [(ngModel)]="newTest.testTitle">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
                         <label for="test-title">Môn học</label>
 
-                        <select class="form-control" name="test-subject" [(ngModel)]="selectedSubjectTest" (change)="getPart()">
+                        <select class="form-control" name="test-subject" [(ngModel)]="selectedSubjectTest"
+                            (change)="getPart()">
                             <ng-container *ngFor="let subject of subjects">
-                                    <option [ngValue]="subject">{{subject.subjectName}}</option>
+                                <option [ngValue]="subject">{{subject.subjectName}}</option>
                             </ng-container>
-                            
                         </select>
-
                     </div>
-
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
                         <label for="test-title">Phần</label>
                         <select class="form-control" name="test-part" [(ngModel)]="selectedPartTest">
-                           
                             <ng-container *ngFor="let part of parts">
                                 <option [ngValue]="part">{{part.partName}}</option>
                             </ng-container>
-                            
-
                         </select>
                     </div>
                 </div>
+                <div class="form-row col-sm-12">
+
+                </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="test-title">Thời gian làm bài</label>
-                        <input type="number" class="form-control" name="test-title" placeholder="Tính theo phút" [(ngModel)]="newTest.testTime">
+                        <label for="test-duration">Thời gian làm bài</label>
+                        <input type="number" class="form-control" name="test-duration" placeholder="Tính theo phút"
+                            [(ngModel)]="newTest.testTime">
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="test-title">Ngày kiểm tra</label>
-                        <input type="datetime-local" class="form-control" name="test-title">
+                        <label for="test-datetime">Ngày kiểm tra</label>
+                        <input type="datetime-local" class="form-control" name="test-datetime"
+                            >
+                    </div>
+                </div>
+                <div class="form-row">
+
+                    <div class="form-group col-md-8">
+
+                        <textarea class="form-control" id="test-classes" readonly rows="3"></textarea>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#class">Chọn
+                            lớp</button>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
-                    
+
                     <div class="row" style="height: 50vh; overflow: scroll">
-                        
+
                         <div class="col-sm-12 border border-default bg-light">
                             <h3 class="mb-2 text-center">Câu hỏi được chọn</h3>
                             <ul class="list-group">
                                 <ng-container *ngFor="let q of listTest; let i = index">
-                                    <li class="list-test-question list-group-item d-inline question-item btn-outline-info" >
-                                        <a class=" p-1"><i class="fa fa-minus-circle" (click)="removeTestList(q)"></i></a>
+                                    <li
+                                        class="list-test-question list-group-item d-inline question-item btn-outline-info">
+                                        <a class=" p-1"><i class="fa fa-minus-circle"
+                                                (click)="removeTestList(q)"></i></a>
                                         {{q.questionContent}}
                                         <a href="#detail-question" class="icon-info" data-toggle="modal">
                                             <i class="fa fa-eye text-white" (click)="getSelectedQuestion(q.id)"></i>
                                         </a>
-                                        
+
                                     </li>
-            
+
                                 </ng-container>
                             </ul>
                         </div>
@@ -112,92 +127,140 @@
             </form>
         </div>
     </div>
-    
+
 </div>
 
 <div id="detail-question" tabindex="-1" role="dialog" class="modal fade">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-                <div class="modal-header">
-                    <h4 class="modal-title">Chi tiết câu hỏi</h4>
+            <div class="modal-header">
+                <h4 class="modal-title">Chi tiết câu hỏi</h4>
 
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-row">
-                                <div class="col-sm-12">
-                                    <label>Nội dung: </label>
-                                    <b>{{selectedQuestion.questionContent}}</b>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <label>Nội dung: </label>
+                                <b>{{selectedQuestion.questionContent}}</b>
 
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-sm-12">
-                                    <label>Điểm: </label>
-                                    <label>{{selectedQuestion.point}}</label>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-sm-12">
-                                    <label>Độ khó: </label>
-                                    <label [ngSwitch]="selectedQuestion.difficultyLevel">
-                                        <label class="badge badge-success" *ngSwitchCase="1">
-                                            Dễ
-                                        </label>
-                                        <label class="badge badge-warning" *ngSwitchCase="2">
-                                            Trung bình
-                                        </label>
-                                        <label class="badge badge-danger" *ngSwitchDefault>
-                                            Khó
-                                        </label>
-                                    </label>
-
-
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-sm-12">
-                                    <label>Kiểu câu hỏi:</label>
-                                    <label>{{selectedType.name}}</label>
-
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-sm-12">
-                                    <label>Môn học:</label>
-                                    <label>{{selectedSubject.subjectName}}</label>
-
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-sm-12">
-                                    <label>Phần:</label>
-                                    <label>{{selectedPart.partName}}</label>
-
-                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-row">
-                                <div class="col-sm-12">
-                                    <label>Đáp án:</label>
-                                    <ng-container *ngFor="let answer of selectedAnswers">
-                                        <p
-                                            [ngClass]="{'text-success font-weight-bold': answer.correct, 'text-secondary': !answer.correct}">
-                                            {{answer.answerContent}}</p>
-                                    </ng-container>
-                                </div>
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <label>Điểm: </label>
+                                <label>{{selectedQuestion.point}}</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <label>Độ khó: </label>
+                                <label [ngSwitch]="selectedQuestion.difficultyLevel">
+                                    <label class="badge badge-success" *ngSwitchCase="1">
+                                        Dễ
+                                    </label>
+                                    <label class="badge badge-warning" *ngSwitchCase="2">
+                                        Trung bình
+                                    </label>
+                                    <label class="badge badge-danger" *ngSwitchDefault>
+                                        Khó
+                                    </label>
+                                </label>
+
+
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <label>Kiểu câu hỏi:</label>
+                                <label>{{selectedType.name}}</label>
+
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <label>Môn học:</label>
+                                <label>{{selectedSubject.subjectName}}</label>
+
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <label>Phần:</label>
+                                <label>{{selectedPart.partName}}</label>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-row">
+                            <div class="col-sm-12">
+                                <label>Đáp án:</label>
+                                <ng-container *ngFor="let answer of selectedAnswers">
+                                    <p
+                                        [ngClass]="{'text-success font-weight-bold': answer.correct, 'text-secondary': !answer.correct}">
+                                        {{answer.answerContent}}</p>
+                                </ng-container>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Đóng">    
-                </div>
-
             </div>
+            <div class="modal-footer">
+                <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Đóng">
+            </div>
+
         </div>
     </div>
+</div>
+
+<!-- Modal -->
+<form >
+        <div class="modal fade" id="class" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Chọn lớp</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+            
+                                        </th>
+                                        <th>#</th>
+                                        <th>Lớp</th>
+            
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let class of classes; let i = index">
+                                        <tr style="cursor: pointer">
+                                            <td scope="row">
+                                                <div class="form-check">
+                                                    <input type="checkbox" (change)="onChange(class, $event.target.checked)" name="class-checked" class="form-check-input" id="exampleCheck1">
+                                                </div>
+                                            </td>
+                                            <td>{{i+1}}</td>
+                                            <td>{{class.className}}</td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary" (click)="onClassSelected()">Hoàn thành</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</form>
+
 <ngx-loading-bar></ngx-loading-bar>
