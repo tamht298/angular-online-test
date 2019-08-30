@@ -31,8 +31,9 @@ export class AddTestComponent implements OnInit {
   selectedPartTest: any={};
   newTest: Tests = new Tests();
   classes: Classes[]=[];
-  
+  arrClass: string='';
   classSelected: Classes[] = [];
+  searchText: string='';
   constructor(private testService: TestsService, 
     private questionService: QuestionService,
     private subjectService: SubjectService,
@@ -91,13 +92,14 @@ export class AddTestComponent implements OnInit {
   //tạo bài test
   createTest(){
     this.newTest.questionList=this.listTest;
-    this.newTest.deleted=false;
-    this.newTest.dateTimeTest='2019-08-28 10:02:35';
-    console.log(this.newTest);
-   
+    this.newTest.classeSet=this.classSelected;
+    //let date=this.newTest.dateTimeTest.replace('T', ' ') + ':00';
+    //this.newTest.dateTimeTest=date;
     
-    // this.testService.createTest(this.newTest).subscribe(()=>{
-    //   console.log('thành công');
+    console.log(this.newTest);
+    
+    //  this.testService.createTest(this.newTest).subscribe(()=>{
+    //    console.log('thành công');
       
     // })
   }
@@ -106,8 +108,6 @@ export class AddTestComponent implements OnInit {
   loadClasses(){
     this.classesService.getClasses().subscribe(data=>{
       this.classes=data;
-      console.log(this.classes);
-      
     })
   }
   onChange(c: Classes, isChecked: boolean){
@@ -123,8 +123,17 @@ export class AddTestComponent implements OnInit {
 
   //Lấy danh sách lớp được chọn đổ lên text area
   onClassSelected(){
-    this.newTest.classeSet=this.classSelected;
+    let className=[];
     
-    
+    this.classSelected.forEach(item=>{
+      className.push(item.className);
+    })
+    this.arrClass=className.join(', ');
+    this.closeModalById('closeAddModal');
+  }
+
+  //gọi nút đóng 
+  closeModalById(id: string){
+    document.getElementById(id).click();
   }
 }

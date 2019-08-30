@@ -26,15 +26,14 @@ export class CandidatesComponent implements OnInit {
   searchText="";
   
   dtOptions: DataTables.Settings = {};
+  
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
     
    }
   ngOnInit() {  
   
     this.loadData();
-    this.dtOptions = {
-      pagingType: 'full_numbers'
-    };
+
   }
 
   loadData(){

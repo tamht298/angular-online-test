@@ -3,7 +3,7 @@
         <div class="col-sm-6 mb-4">
             <h3>Danh sách câu hỏi</h3>
 
-            <div class="btn-list-questions d-flex align-items-end flex-column mb-5">
+            <div class="btn-list-questions d-flex align-items-end flex-column mb-5 col-sm-6">
                 <div class="input-group ">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -12,7 +12,7 @@
 
                     </div>
                     <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá ..."
-                        aria-label="Search" aria-describedby="basic-addon2">
+                        aria-label="Search" aria-describedby="basic-addon2" [(ngModel)]="searchText">
                 </div>
 
             </div>
@@ -20,7 +20,7 @@
             <div class="list-questions border border-default" data-spy="scroll" style="height: 50vh; overflow: scroll">
 
                 <ul class="list-group">
-                    <ng-container *ngFor="let q of questionList; let i = index">
+                    <ng-container *ngFor="let q of questionList | searchFilter: searchText; let i = index">
                         <li class="list-question list-group-item d-inline question-item btn-outline-secondary">
                             <a class="add-question-icon"><i class="fa fa-plus-circle" (click)="addTestList(q)"></i></a>
                             {{q.questionContent}}
@@ -85,19 +85,17 @@
 
                     <div class="form-group col-md-6">
                         <label for="test-datetime">Ngày kiểm tra</label>
-                        <input type="datetime-local" class="form-control" name="test-datetime"
-                            >
+                        <input type="datetime-local" class="form-control" name="test-datetime" [(ngModel)]="newTest.dateTimeTest">
                     </div>
                 </div>
                 <div class="form-row">
 
                     <div class="form-group col-md-8">
 
-                        <textarea class="form-control" id="test-classes" readonly rows="3"></textarea>
+                        <input class="form-control" id="test-classes" readonly rows="3" [value]="arrClass">
                     </div>
                     <div class="form-group col-sm-4">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#class">Chọn
-                            lớp</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#class">Chọn lớp</button>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -255,7 +253,7 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="button" id="closeAddModal" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                             <button type="submit" class="btn btn-primary" (click)="onClassSelected()">Hoàn thành</button>
                         </div>
                     </div>

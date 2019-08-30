@@ -111,6 +111,8 @@ export class QuestionComponent implements OnInit {
 
   getPart() {
     //get đối tượng subject là selectedSubject
+    console.log(this.selectedSubject.subjectName);
+    
     this.partService.getPartBySubjectId(this.selectedSubject.id).subscribe(data=>this.parts=data);
 
   }

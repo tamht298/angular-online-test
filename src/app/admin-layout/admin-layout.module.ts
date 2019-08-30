@@ -31,6 +31,7 @@ import {DataTablesModule} from 'angular-datatables';
     NgxPaginationModule,
     LoadingBarHttpClientModule,
     DataTablesModule
+    
   ],
   exports: [AdminLayoutComponent]
 })
