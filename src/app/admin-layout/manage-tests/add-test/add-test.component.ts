@@ -93,15 +93,15 @@ export class AddTestComponent implements OnInit {
   createTest(){
     this.newTest.questionList=this.listTest;
     this.newTest.classeSet=this.classSelected;
-    //let date=this.newTest.dateTimeTest.replace('T', ' ') + ':00';
-    //this.newTest.dateTimeTest=date;
+    let date=this.newTest.dateTimeTest.replace('T', ' ') + ':00';
+    this.newTest.dateTimeTest=date;
     
     console.log(this.newTest);
     
-    //  this.testService.createTest(this.newTest).subscribe(()=>{
-    //    console.log('thành công');
+      this.testService.createTest(this.newTest).subscribe(()=>{
+        console.log('thành công');
       
-    // })
+     })
   }
 
   //load dữ liệu của lớp
