@@ -4,6 +4,7 @@ import { Candidate } from 'src/app/models/candidate';
 import { CandidateService } from 'src/app/services/candidate.service';
 
 import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
 
 
 
@@ -12,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './candidates.component.html',
   styleUrls: ['./candidates.component.scss']
 })
-export class CandidatesComponent implements OnInit {
+export class CandidatesComponent implements OnInit, OnDestroy {
 
  
   // firstName=''; lastName=''; gender=''; email=''; phone=''; 
@@ -23,10 +24,10 @@ export class CandidatesComponent implements OnInit {
   
   candidate: Candidate;
   selectedId: number;
-  searchText="";
+  
   
   dtOptions: DataTables.Settings = {};
-  
+  dtTrigger: Subject<any> = new Subject();
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
     
    }
@@ -36,24 +37,26 @@ export class CandidatesComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
   loadData(){
+    
     this.loading=true;
     this.candidateSerice.getCandidates().subscribe(data=>{
       this.candidates=data;
       this.loading=false;
+      this.dtTrigger.next();
     },
     error=>console.log(error));
   }
   addCandidate(){
     
     this.candidate= this.newCandidate;
-    this.candidateSerice.createCandidate(this.candidate).subscribe(data=>{
-      this.candidates=data;
-      
-      this.candidateSerice.getCandidates().subscribe(data=>this.candidates=data);
-      this.closeModalById("closeAddModal");
-      this.showSuccess('Success', 'Added succesfully!');
-      
+    this.candidateSerice.createCandidate(this.candidate).subscribe(()=>{
+
+      this.fetchData('closeAddModal');
     }, error=>{
       this.closeModalById("closeAddModal");
       this.showError('Error', 'Failed adding!');
@@ -69,35 +72,43 @@ export class CandidatesComponent implements OnInit {
     
   }
 
+  fetchData(idForm: string){
+    this.ngOnDestroy();
+  
+    this.candidateSerice.getCandidates().subscribe(data=>{
+      
+      this.candidates=data;
+      
+      //close modal
+      this.closeModalById(idForm);
+      //show successful toast
+      this.showSuccess('Dữ liệu đã cập nhật!', 'Thành công');
+      this.dtTrigger.next();
+    },
+    error=>{
+      console.log(error);
+      this.closeModalById(idForm);
+      this.showError('Cập nhật thất bại', 'Lỗi');
+    });
+  }
  
   //delete event click
   removeCandidate(){
-    this.candidateSerice.deleteCandidate(this.selectedId).subscribe(data=>{
-      
-      console.log(data);
+    this.candidateSerice.deleteCandidate(this.selectedId).subscribe(data=>{  
       //reload data
-      // this.candidateSerice.getCandidates().subscribe(data=>this.candidates=data);
-      this.loadData();
-      //close modal
-      this.closeModalById('closeDeleteModal');
-      //show successful toast
-      this.showSuccess('Success', 'Removed successfully!');
-      
-    }, error=>{
-      this.closeModalById('closeDeleteModal');
-      this.showError('Error', 'Failed removement!');
-      console.log(error);
-      
+      this.fetchData('closeDeleteModal');
+    }, error=>{   
+      console.log(error);      
     });
   }
   editCandidate(){
+    
     this.candidateSerice.updateCandidate(this.selectedCandidate).subscribe(()=>{
       
-      this.candidateSerice.getCandidates().subscribe(data=>this.candidates=data);
-      //close modal
-      this.closeModalById('closeEditModal');
-      //show successful toast
-      this.showSuccess('Success', 'Edited successfully!');
+      this.fetchData('closeEditModal');
+      
+    }, error=>{
+      console.log(error);
     })
   }
   //define successful toast

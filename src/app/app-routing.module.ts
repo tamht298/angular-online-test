@@ -10,6 +10,7 @@ import { AddTestComponent } from './admin-layout/manage-tests/add-test/add-test.
 import { ListTestComponent } from './admin-layout/manage-tests/list-test/list-test.component';
 
 
+
 const routes: Routes = [
   {path: 'admin', component: AdminLayoutComponent, children: [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},

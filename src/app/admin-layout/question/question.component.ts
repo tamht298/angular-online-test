@@ -1,15 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Answer} from 'src/app/models/answer';
 import {QuestiontypeService} from 'src/app/services/questiontype.service';
 import {Question} from 'src/app/models/question';
 import {QuestionType} from 'src/app/models/question_type';
 import {SubjectService} from 'src/app/services/subject.service';
-import {Subject} from 'src/app/models/subject';
+import {Subjects} from 'src/app/models/subjects';
 import {QuestionService} from 'src/app/services/question.service';
 import {Part} from 'src/app/models/part';
 import { ToastrService } from 'ngx-toastr';
 import { PartService } from 'src/app/services/part.service';
 
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { PartService } from 'src/app/services/part.service';
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.scss']
 })
-export class QuestionComponent implements OnInit {
+export class QuestionComponent implements OnInit, OnDestroy {
 
   loading = false;
   answer1: Answer;
@@ -26,7 +27,7 @@ export class QuestionComponent implements OnInit {
   qType: any={};
   newQuestion: any = {};
   questions: Question[]=[];
-  subjects: Subject[];
+  subjects: Subjects[];
   selectedSubject: any = {};
   isShuffle: boolean = true;
   TF: boolean = false;
@@ -43,8 +44,8 @@ export class QuestionComponent implements OnInit {
     {id: 'true', value: 'Đúng'},
     {id: 'false', value: 'Sai'}
   ];
-  p: Number = 1;
-  count: Number = 2;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
 
   constructor(
     private questionTypeService: QuestiontypeService,
@@ -66,6 +67,30 @@ export class QuestionComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+
+  fetchData(idForm: string){
+    this.ngOnDestroy();
+  
+    this.questionService.getQuestions().subscribe(data=>{
+      
+      this.questions=data;
+      
+      //close modal
+      this.closeModalById(idForm);
+      //show successful toast
+      this.showSuccess('Dữ liệu đã cập nhật!', 'Thành công');
+      this.dtTrigger.next();
+    },
+    error=>{
+      console.log(error);
+      this.closeModalById(idForm);
+      this.showError('Cập nhật thất bại', 'Lỗi');
+    });
+  }
   addQuestion() {
 
     if(this.newQuestion.questionType.typeCode == 'TF'){
@@ -92,11 +117,12 @@ export class QuestionComponent implements OnInit {
     
     
     this.questionService.createQuestion(this.newQuestion).subscribe(data=>{
-      this.questions=data;
-      this.loadQuestions();
+      // this.questions=data;
+      // this.loadQuestions();
       
-      this.closeModalById('closeAddModal');
-      this.showSuccess('Thêm câu hỏi thành công', 'Hoàn thành');
+      // this.closeModalById('closeAddModal');
+      // this.showSuccess('Thêm câu hỏi thành công', 'Hoàn thành');
+      this.fetchData('closeAddModal');
     }, error=>{
       this.showError('Thêm câu hỏi thất bại', 'Lỗi')
       

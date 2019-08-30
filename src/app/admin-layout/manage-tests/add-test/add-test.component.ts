@@ -3,7 +3,7 @@ import { TestsService } from 'src/app/services/tests.service';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuestionType } from 'src/app/models/question_type';
 import { SubjectService } from 'src/app/services/subject.service';
-import { Subject } from '../../../models/subject';
+import { Subjects } from '../../../models/subjects';
 import { PartService } from 'src/app/services/part.service';
 import { Question } from 'src/app/models/question';
 import { Tests } from 'src/app/models/tests';
@@ -25,7 +25,7 @@ export class AddTestComponent implements OnInit {
   selectedSubject: any={};
   selectedAnswers: any=[];
   selectedType: any={};
-  subjects: Subject;
+  subjects: Subjects;
   parts: any=[];
   selectedSubjectTest: any={};
   selectedPartTest: any={};
