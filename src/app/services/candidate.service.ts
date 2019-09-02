@@ -10,9 +10,10 @@ import { map } from 'rxjs/operators';
 export class CandidateService {
 
   candidatesUrl= 'https://sv-web-trac-nghiem.herokuapp.com/api/candidates';
+  baseUrl = 'https://sv-web-trac-nghiem.herokuapp.com/api/false/candidates';
   constructor(private http: HttpClient) { }
   getCandidates(): Observable<any[]>{
-    return this.http.get<[]>(this.candidatesUrl);
+    return this.http.get<[]>(this.baseUrl);
   }
   getCandidateById(id: number): Observable<any>{
     return this.http.get(`${this.candidatesUrl}/${id}`);
@@ -21,10 +22,10 @@ export class CandidateService {
     return this.http.post(this.candidatesUrl, candidate).pipe(map((data: any) => data.result));
   }
   updateCandidate(candidate: Candidate): Observable<any>{
-    return this.http.put(`${this.candidatesUrl}`, candidate).pipe(map((data: any) => data.result));
+    return this.http.put(this.candidatesUrl, candidate).pipe(map((data: any) => data.result));
   }
-  deleteCandidate(id: number): Observable<any>{
-    return this.http.delete(`${this.candidatesUrl}/${id}`, { responseType: 'text' });
+  deleteCandidate(candidate: Candidate): Observable<any>{
+    return this.http.put(this.candidatesUrl, candidate).pipe(map((data: any) => data.result));
   }
   
 }

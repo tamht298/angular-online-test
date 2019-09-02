@@ -9,6 +9,9 @@ import { Question } from 'src/app/models/question';
 import { Tests } from 'src/app/models/tests';
 import { ClassesService } from '../../../services/classes.service';
 import { Classes } from '../../../models/classes';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-add-test',
@@ -25,20 +28,23 @@ export class AddTestComponent implements OnInit {
   selectedSubject: any={};
   selectedAnswers: any=[];
   selectedType: any={};
-  subjects: Subjects;
+  subjects: Subjects[]=[];
   parts: any=[];
   selectedSubjectTest: any={};
-  selectedPartTest: any={};
+  selectedPartTest: any;
   newTest: Tests = new Tests();
   classes: Classes[]=[];
   arrClass: string='';
   classSelected: Classes[] = [];
   searchText: string='';
+  totalScore: number=0;
   constructor(private testService: TestsService, 
     private questionService: QuestionService,
     private subjectService: SubjectService,
     private partService: PartService,
-    private classesService: ClassesService) { }
+    private classesService: ClassesService,
+    private router: Router,
+    private toastr: ToastrService ) { }
 
   ngOnInit() {
     this.loadQuestion();
@@ -73,13 +79,25 @@ export class AddTestComponent implements OnInit {
 
   //lấy part theo subject được chọn (selectedSubject)
   getPart(){
-    this.partService.getPartBySubjectId(this.selectedSubjectTest.id).subscribe(data=>this.parts=data);
+    
+    this.partService.getPartBySubjectId(this.selectedSubjectTest.id).subscribe(data=>{
+      this.parts=data;
+      this.selectedPartTest='';
+    });
   }
   //thêm câu hỏi vào bài test
   addTestList(q: Question){
-    let index = this.questionList.findIndex(item=>item.id===q.id); 
-    this.questionList.splice(index, 1);
-    this.listTest.push(q);
+    let index = this.questionList.findIndex(item=>item.id===q.id);
+    if(this.totalScore+q.point>100){
+      this.showError('Điểm số vượt quá 100', 'Lỗi');
+    }
+    else{
+      this.questionList.splice(index, 1);
+      this.listTest.push(q);
+      this.totalScore+=q.point;
+    }
+    
+    
   }
 
   //xoá câu hỏi bài test
@@ -87,21 +105,30 @@ export class AddTestComponent implements OnInit {
     let index = this.listTest.findIndex(item=>item.id===q.id);  
     this.listTest.splice(index, 1);
     this.questionList.push(q);
+    this.totalScore-=q.point;
   }
 
   //tạo bài test
-  createTest(){
+  createTest(f: NgForm){
     this.newTest.questionList=this.listTest;
     this.newTest.classeSet=this.classSelected;
     let date=this.newTest.dateTimeTest.replace('T', ' ') + ':00';
     this.newTest.dateTimeTest=date;
-    
-    console.log(this.newTest);
-    
+    if(this.totalScore==100){
       this.testService.createTest(this.newTest).subscribe(()=>{
-        console.log('thành công');
+        this.showSuccess('Dữ liệu đã cập nhật!', 'Thành công');
+        this.totalScore=0;
+         f.reset();
+      }, error=>{
+        console.log(error);
+        
+        this.showError('Cập nhật thất bại', 'Lỗi');
+      })
+    }
+    else{
+      this.showError('Tổng điểm chưa đạt 100đ', 'Lỗi');
+    }
       
-     })
   }
 
   //load dữ liệu của lớp
@@ -132,8 +159,26 @@ export class AddTestComponent implements OnInit {
     this.closeModalById('closeAddModal');
   }
 
+  getQuestionsByPartId(){
+    this.partService.getQuestionsByPartId(this.selectedPartTest.id).subscribe(data=>{
+      this.questionList=data.filter(item=>item.deleted===false);
+      
+    })
+  }
   //gọi nút đóng 
   closeModalById(id: string){
     document.getElementById(id).click();
+  }
+
+  onBack(url: string){
+    this.router.navigateByUrl(url);
+  }
+    //define successful toast
+  showSuccess(title: string, message: string) {
+    this.toastr.success(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
+  }
+  //define error toast
+  showError(title: string, message: string){
+    this.toastr.error(title, message, {timeOut: 2000, progressBar: true, closeButton: true});
   }
 }

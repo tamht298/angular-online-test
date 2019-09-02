@@ -1,10 +1,13 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, AfterViewInit, ViewChild } from '@angular/core';
 
 import { Candidate } from 'src/app/models/candidate';
 import { CandidateService } from 'src/app/services/candidate.service';
 
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
+import { ThrowStmt } from '@angular/compiler';
+import { CUSTOM_LANGUAGE } from 'src/app/shared/language-options';
 
 
 
@@ -15,9 +18,9 @@ import { Subject } from 'rxjs';
 })
 export class CandidatesComponent implements OnInit, OnDestroy {
 
- 
-  // firstName=''; lastName=''; gender=''; email=''; phone=''; 
-  loading = false;
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
+
   selectedCandidate: any ={};
   newCandidate: any={};
   candidates: Candidate[];
@@ -28,43 +31,56 @@ export class CandidatesComponent implements OnInit, OnDestroy {
   
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
+  
+
   constructor(private candidateSerice: CandidateService, private toastr: ToastrService) {
     
    }
   ngOnInit() {  
-  
-    this.loadData();
-
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      language: CUSTOM_LANGUAGE
+    }
+    this.newCandidate.gender='MALE'
+    this.candidateSerice.getCandidates().subscribe(data=>{
+      this.candidates=data;
+     
+      this.dtTrigger.next();
+      
+    },
+    error=>console.log(error));
   }
 
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+
   }
-  loadData(){
-    
-    this.loading=true;
-    this.candidateSerice.getCandidates().subscribe(data=>{
-      this.candidates=data;
-      this.loading=false;
+
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      
+      // Call the dtTrigger to rerender again
       this.dtTrigger.next();
-    },
-    error=>console.log(error));
+    });
   }
+
   addCandidate(){
     
     this.candidate= this.newCandidate;
     this.candidateSerice.createCandidate(this.candidate).subscribe(()=>{
-
       this.fetchData('closeAddModal');
     }, error=>{
-      this.closeModalById("closeAddModal");
-      this.showError('Error', 'Failed adding!');
       console.log(error);
       
     });
   
   }
+
   //get id when click button
   getSelectedId(id:number){
      this.selectedId=id;
@@ -73,7 +89,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
   }
 
   fetchData(idForm: string){
-    this.ngOnDestroy();
   
     this.candidateSerice.getCandidates().subscribe(data=>{
       
@@ -81,9 +96,10 @@ export class CandidatesComponent implements OnInit, OnDestroy {
       
       //close modal
       this.closeModalById(idForm);
+      //rerender table
+      this.rerender();
       //show successful toast
       this.showSuccess('Dữ liệu đã cập nhật!', 'Thành công');
-      this.dtTrigger.next();
     },
     error=>{
       console.log(error);
@@ -94,15 +110,17 @@ export class CandidatesComponent implements OnInit, OnDestroy {
  
   //delete event click
   removeCandidate(){
-    this.candidateSerice.deleteCandidate(this.selectedId).subscribe(data=>{  
-      //reload data
-      this.fetchData('closeDeleteModal');
-    }, error=>{   
-      console.log(error);      
+    
+    this.candidateSerice.getCandidateById(this.selectedId).subscribe(data=>{
+      let c = data;
+      c.deleted=true;
+      this.candidateSerice.deleteCandidate(c).subscribe(()=>{
+        this.fetchData('closeDeleteModal');
+      }, error=> console.log(error))
     });
   }
   editCandidate(){
-    
+    console.log('thành công')
     this.candidateSerice.updateCandidate(this.selectedCandidate).subscribe(()=>{
       
       this.fetchData('closeEditModal');
@@ -122,6 +140,4 @@ export class CandidatesComponent implements OnInit, OnDestroy {
   closeModalById(idModal: string){
     document.getElementById(idModal).click();
   }
-
-  
 }

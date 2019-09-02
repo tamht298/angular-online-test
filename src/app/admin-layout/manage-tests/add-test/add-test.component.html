@@ -1,55 +1,30 @@
 <div class="container-fluid">
     <div class="row mb-4">
-        <div class="col-sm-6 mb-4">
-            <h3>Danh sách câu hỏi</h3>
-
-            <div class="btn-list-questions d-flex align-items-end flex-column mb-5 col-sm-6">
-                <div class="input-group ">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-search"></i>
-                        </span>
-
-                    </div>
-                    <input name="searchCandidates" type="text" class="form-control" placeholder="Nhập từ khoá ..."
-                        aria-label="Search" aria-describedby="basic-addon2" [(ngModel)]="searchText">
-                </div>
-
-            </div>
-            <div class="badge badge-primary">Danh sách này có: <span>{{questionList.length}}</span>&nbsp;câu hỏi</div>
-            <div class="list-questions border border-default" data-spy="scroll" style="height: 50vh; overflow: scroll">
-
-                <ul class="list-group">
-                    <ng-container *ngFor="let q of questionList | searchFilter: searchText; let i = index">
-                        <li class="list-question list-group-item d-inline question-item btn-outline-secondary">
-                            <a class="add-question-icon"><i class="fa fa-plus-circle" (click)="addTestList(q)"></i></a>
-                            {{q.questionContent}}
-                            <a href="#detail-question" class="icon-info" data-toggle="modal">
-                                <i class="fa fa-eye" (click)="getSelectedQuestion(q.id)"></i>
-                            </a>
-
-                        </li>
-
-                    </ng-container>
-                </ul>
-            </div>
-
-        </div>
         <div class="col-sm-6">
-            <form (ngSubmit)="createTest()">
-                <div class="form-row justify-content-end">
+            <form>
+                <div class="form-row justify-content-start">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary" role="button"><i
-                                class="fa fa-plus-circle"></i>&nbsp;Tạo bài kiểm tra</button>
-
+                        <button type="button" class="btn btn-outline-secondary" role="button"
+                            (click)="onBack('/admin/tests/list-test')"><i
+                                class="fa fa-arrow-alt-circle-left"></i>&nbsp;Quay lại</button>
                     </div>
+
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
-                        <label for="test-title">Tiêu đề</label>
-                        <input type="email" class="form-control" name="test-title" placeholder="Nhập tiêu đề"
-                            [(ngModel)]="newTest.testTitle">
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-search"></i>
+                                </span>
+
+                            </div>
+                            <input name="searchCandidates" type="text" class="form-control"
+                                placeholder="Nhập từ khoá ..." aria-label="Search" aria-describedby="basic-addon2"
+                                [(ngModel)]="searchText">
+                        </div>
                     </div>
+
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
@@ -57,8 +32,8 @@
 
                         <select class="form-control" name="test-subject" [(ngModel)]="selectedSubjectTest"
                             (change)="getPart()">
-                            <ng-container *ngFor="let subject of subjects">
-                                <option [ngValue]="subject">{{subject.subjectName}}</option>
+                            <ng-container *ngFor="let s of subjects">
+                                <option [ngValue]="s">{{s.subjectName}}</option>
                             </ng-container>
                         </select>
                     </div>
@@ -66,52 +41,153 @@
                 <div class="form-row">
                     <div class="form-group col-sm-12">
                         <label for="test-title">Phần</label>
-                        <select class="form-control" name="test-part" [(ngModel)]="selectedPartTest">
+                        <select class="form-control" name="test-part" [(ngModel)]="selectedPartTest"
+                            (change)="getQuestionsByPartId()">
                             <ng-container *ngFor="let part of parts">
                                 <option [ngValue]="part">{{part.partName}}</option>
                             </ng-container>
                         </select>
                     </div>
                 </div>
-                <div class="form-row col-sm-12">
 
+            </form>
+            <div class="badge badge-primary">Danh sách này có: <span>{{questionList.length}}</span>&nbsp;câu hỏi</div>
+            <div class="form-group col-sm-12">
+
+                <div class="row" style="height: 80vh; overflow: scroll">
+
+                    <div class="col-sm-12 border border-default bg-light">
+                        <h3 class="mb-2 text-center">Danh sách câu hỏi</h3>
+                        <ul class="list-group">
+                            <ng-container *ngFor="let q of questionList | searchFilter:searchText; let i = index">
+
+                                <li
+                                    class="list-test-question list-group-item d-inline question-item btn-outline-secondary">
+                                    <a class="p-1"><i class="fa fa-plus-circle" (click)="addTestList(q)"></i></a>
+                                    {{q.questionContent}}
+                                    <span [ngSwitch]="q.difficultyLevel">
+                                        <span class="badge badge-success" *ngSwitchCase="1">
+                                            Dễ
+                                        </span>
+                                        <span class="badge badge-warning" *ngSwitchCase="2">
+                                            Trung bình
+                                        </span>
+                                        <span class="badge badge-danger" *ngSwitchDefault>
+                                            Khó
+                                        </span>
+                                    </span>&nbsp;
+                                    <span class="badge badge-info">{{q.point}} đ</span>
+                                    <a href="#detail-question" class="icon-info float-right" data-toggle="modal">
+                                        <i class="fa fa-eye text-white" (click)="getSelectedQuestion(q.id)"></i>
+                                    </a>
+
+                                </li>
+
+                            </ng-container>
+                        </ul>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <form #f="ngForm" (ngSubmit)="f.form.valid && createTest(f)">
+                <div class="form-row justify-content-end">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" role="button"><i
+                                class="fa fa-plus-circle"></i>&nbsp;Tạo bài kiểm tra</button>
+
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-sm-12">
+                        <label for="test-title">Tiêu đề</label>
+                        <input type="email" id="test-title" class="form-control" name="testTitle"
+                            placeholder="Nhập tiêu đề" [(ngModel)]="newTest.testTitle" required #testTitle="ngModel"
+                            ngModel
+                            [ngClass]="{'is-invalid': testTitle.invalid && (testTitle.dirty || testTitle.touched|| f.submitted)}">
+                        <div *ngIf="testTitle.invalid && (testTitle.dirty || testTitle.touched|| f.submitted)">
+                            <small class="text text-danger">Tiêu đề không bỏ trống!</small>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="test-duration">Thời gian làm bài</label>
-                        <input type="number" class="form-control" name="test-duration" placeholder="Tính theo phút"
-                            [(ngModel)]="newTest.testTime">
+                        <input type="number" class="form-control" name="testDuration" placeholder="Tính theo phút"
+                            [(ngModel)]="newTest.testTime" ngModel #testDuration="ngModel"
+                            [ngClass]="{'is-invalid': testDuration.invalid && (testDuration.dirty || testDuration.touched|| f.submitted)}"
+                            required>
+                        <div *ngIf="testDuration.invalid && (testDuration.dirty || testDuration.touched|| f.submitted)">
+                            <small class="text text-danger">Thời gian không bỏ trống!</small>
+                        </div>
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="test-datetime">Ngày kiểm tra</label>
-                        <input type="datetime-local" class="form-control" name="test-datetime" [(ngModel)]="newTest.dateTimeTest">
+                        <label for="test-datetime">Ngày, giờ kiểm tra</label>
+                        <input type="datetime-local" class="form-control" name="testDatetime"
+                            [(ngModel)]="newTest.dateTimeTest" ngModel #testDatetime="ngModel" required
+                            [ngClass]="{'is-invalid': testDatetime.invalid && (testDatetime.dirty || testDatetime.touched|| f.submitted)}">
+                        <div *ngIf="testDatetime.invalid && (testDatetime.dirty || testDatetime.touched|| f.submitted)">
+                            <small class="text text-danger">Ngày, giờ kiểm tra không bỏ trống!</small>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
 
                     <div class="form-group col-md-8">
 
-                        <input class="form-control" id="test-classes" readonly rows="3" [value]="arrClass">
+                        <input class="form-control" name="testClasses" id="test-classes" readonly rows="3"
+                            [value]="arrClass" [(ngModel)]="classSelected" ngModel #testClasses="ngModel"
+                            [ngClass]="{'is-invalid': classSelected?.length==0 && (testClasses.dirty || testClasses.touched|| f.submitted)}">
+                        <div
+                            *ngIf="classSelected?.length==0 && (testClasses.dirty || testClasses.touched|| f.submitted)">
+                            <small class="text text-danger">Đừng quên chọn lớp kiểm tra!</small>
+                        </div>
+
                     </div>
                     <div class="form-group col-sm-4">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#class">Chọn lớp</button>
+                        <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#class">Chọn
+                            lớp</button>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="badge badge-success"><span>{{listTest.length}} câu hỏi được chọn</span></div>
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-end">
+                        <div [ngClass]="{'badge badge-success': totalScore==100, 'badge badge-danger': totalScore<100}">
+                            <span>{{totalScore}}/100đ</span></div>
+                    </div>
+                </div>
+
                 <div class="form-group col-sm-12">
 
-                    <div class="row" style="height: 50vh; overflow: scroll">
+                    <div class="row" style="height: 80vh; overflow: scroll">
 
                         <div class="col-sm-12 border border-default bg-light">
                             <h3 class="mb-2 text-center">Câu hỏi được chọn</h3>
                             <ul class="list-group">
                                 <ng-container *ngFor="let q of listTest; let i = index">
                                     <li
-                                        class="list-test-question list-group-item d-inline question-item btn-outline-info">
-                                        <a class=" p-1"><i class="fa fa-minus-circle"
+                                        class="list-test-question list-group-item d-inline question-item btn-outline-primary">
+                                        <a class="p-1"><i class="fa fa-minus-circle"
                                                 (click)="removeTestList(q)"></i></a>
                                         {{q.questionContent}}
-                                        <a href="#detail-question" class="icon-info" data-toggle="modal">
+                                        &nbsp;
+                                        <span [ngSwitch]="q.difficultyLevel">
+                                            <span class="badge badge-success" *ngSwitchCase="1">
+                                                Dễ
+                                            </span>
+                                            <span class="badge badge-warning" *ngSwitchCase="2">
+                                                Trung bình
+                                            </span>
+                                            <span class="badge badge-danger" *ngSwitchDefault>
+                                                Khó
+                                            </span>
+                                        </span>&nbsp;
+                                        <span class="badge badge-secondary">{{q.point}} đ</span>
+                                        <a href="#detail-question" class="icon-info float-right" data-toggle="modal">
                                             <i class="fa fa-eye text-white" (click)="getSelectedQuestion(q.id)"></i>
                                         </a>
 
@@ -215,50 +291,51 @@
 </div>
 
 <!-- Modal -->
-<form >
-        <div class="modal fade" id="class" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Chọn lớp</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>
-            
-                                        </th>
-                                        <th>#</th>
-                                        <th>Lớp</th>
-            
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <ng-container *ngFor="let class of classes; let i = index">
-                                        <tr style="cursor: pointer">
-                                            <td scope="row">
-                                                <div class="form-check">
-                                                    <input type="checkbox" (change)="onChange(class, $event.target.checked)" name="class-checked" class="form-check-input" id="exampleCheck1">
-                                                </div>
-                                            </td>
-                                            <td>{{i+1}}</td>
-                                            <td>{{class.className}}</td>
-                                        </tr>
-                                    </ng-container>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" id="closeAddModal" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                            <button type="submit" class="btn btn-primary" (click)="onClassSelected()">Hoàn thành</button>
-                        </div>
-                    </div>
+<form>
+    <div class="modal fade" id="class" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Danh sách lớp có sẵn</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Chọn lớp</th>
+                                <th>#</th>
+                                <th>Lớp</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let class of classes; let i = index">
+                                <tr>
+                                    <td scope="row">
+                                        <div class="form-check">
+                                            <input type="checkbox" (change)="onChange(class, $event.target.checked)"
+                                                name="class-checked" class="form-check-input" id="exampleCheck1">
+                                        </div>
+                                    </td>
+                                    <td>{{i+1}}</td>
+                                    <td>{{class.className}}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeAddModal" class="btn btn-secondary"
+                        data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" (click)="onClassSelected()">Hoàn thành</button>
                 </div>
             </div>
+        </div>
+    </div>
 </form>
 
 <ngx-loading-bar></ngx-loading-bar>

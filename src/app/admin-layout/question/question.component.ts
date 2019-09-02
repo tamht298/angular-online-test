@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {Answer} from 'src/app/models/answer';
 import {QuestiontypeService} from 'src/app/services/questiontype.service';
 import {Question} from 'src/app/models/question';
@@ -9,8 +9,10 @@ import {QuestionService} from 'src/app/services/question.service';
 import {Part} from 'src/app/models/part';
 import { ToastrService } from 'ngx-toastr';
 import { PartService } from 'src/app/services/part.service';
-
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
+import { CUSTOM_LANGUAGE } from 'src/app/shared/language-options';
+
 
 
 @Component({
@@ -19,14 +21,17 @@ import { Subject } from 'rxjs';
   styleUrls: ['./question.component.scss']
 })
 export class QuestionComponent implements OnInit, OnDestroy {
-
-  loading = false;
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
+ 
   answer1: Answer;
   answer2: Answer;
   questionTypes: QuestionType[]=[];
   qType: any={};
   newQuestion: any = {};
-  questions: Question[]=[];
+  questions: Question[];
   subjects: Subjects[];
   selectedSubject: any = {};
   isShuffle: boolean = true;
@@ -44,8 +49,6 @@ export class QuestionComponent implements OnInit, OnDestroy {
     {id: 'true', value: 'Đúng'},
     {id: 'false', value: 'Sai'}
   ];
-  dtOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject();
 
   constructor(
     private questionTypeService: QuestiontypeService,
@@ -57,33 +60,53 @@ export class QuestionComponent implements OnInit, OnDestroy {
     ) {}
 
   ngOnInit() {
-    this.loadQuestions();
+    
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      language: CUSTOM_LANGUAGE
+    }
+
+    //load danh sach câu hỏi
+    this.questionService.getQuestions().subscribe(data => {
+
+      this.questions = data;
+      this.dtTrigger.next();
+    }, error=> console.log(error));
+
+    //get danh sach loại câu hỏi
     this.questionTypeService.getTypes().subscribe(data => {
-
       this.questionTypes = data;
-
     });
+    //get danh sách môn học
     this.loadSubjects();
-
   }
 
   ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
   }
 
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next();
+    });
+  }
+  //fetch dữ liệu
   fetchData(idForm: string){
-    this.ngOnDestroy();
-  
     this.questionService.getQuestions().subscribe(data=>{
       
       this.questions=data;
       
       //close modal
       this.closeModalById(idForm);
+       //rerender table
+       this.rerender();
       //show successful toast
       this.showSuccess('Dữ liệu đã cập nhật!', 'Thành công');
-      this.dtTrigger.next();
+      
     },
     error=>{
       console.log(error);
@@ -105,27 +128,16 @@ export class QuestionComponent implements OnInit, OnDestroy {
       }
       this.newAnswers.push(this.answer1, this.answer2);
     }
-    else if(this.newQuestion.questionType.typeCode == 'MC'){
-      
-      
-    }
-    
-    
+    else if(this.newQuestion.questionType.typeCode == 'MC'){}
+
     this.newQuestion.deleted = false;
     this.newQuestion.shuffle = this.isShuffle;
     this.newQuestion.questionAnswersList=this.newAnswers;
-    
-    
-    this.questionService.createQuestion(this.newQuestion).subscribe(data=>{
-      // this.questions=data;
-      // this.loadQuestions();
-      
-      // this.closeModalById('closeAddModal');
-      // this.showSuccess('Thêm câu hỏi thành công', 'Hoàn thành');
+    this.questionService.createQuestion(this.newQuestion).subscribe(()=>{
+
       this.fetchData('closeAddModal');
     }, error=>{
       this.showError('Thêm câu hỏi thất bại', 'Lỗi')
-      
       console.log(error);
     });
     
@@ -136,23 +148,15 @@ export class QuestionComponent implements OnInit, OnDestroy {
   }
 
   getPart() {
-    //get đối tượng subject là selectedSubject
-    console.log(this.selectedSubject.subjectName);
-    
     this.partService.getPartBySubjectId(this.selectedSubject.id).subscribe(data=>this.parts=data);
 
   }
   getType(){
-
     this.qType = this.newQuestion.questionType;
-    
-    
     switch(this.qType.typeCode){
       case 'TF':{
         this.TF=true;
-        this.MC=false;
-        console.log('TF');
-        
+        this.MC=false; 
         break;
       }
       case 'MC':{
@@ -160,22 +164,12 @@ export class QuestionComponent implements OnInit, OnDestroy {
         this.TF=false;
         this.newAnswers.length=0;
         this.newAnswers.push(new Answer('', 1, false, false), new Answer('', 2, false, false));
-
         break;
       }
     }
 
   }
 
-  loadQuestions() {
-    this.loading = true;
-    this.questionService.getQuestions().subscribe(data => {
-
-      this.questions = data.filter(item=>item.deleted===false);
-      this.loading = false;
-    });
-
-  }
 
   closeModalById(idModal: string){
     document.getElementById(idModal).click();
@@ -223,11 +217,6 @@ export class QuestionComponent implements OnInit, OnDestroy {
           this.MC=true;
           this.TF=false;     
           this.selectedAnswers=this.selectedQuestion.questionAnswersList;
-          
-          
-          // this.selectedAnswers.length=0;
-          // this.selectedAnswers.push(new Answer('', 1, false, false), new Answer('', 2, false, false));
-           
           break;
         }
           
@@ -242,10 +231,9 @@ export class QuestionComponent implements OnInit, OnDestroy {
       this.selectedTypeId=this.selectedQuestion.questionType.id;
       this.selectedAnswers=this.selectedQuestion.questionAnswersList; 
       this.selectedPartId=this.selectedQuestion.part.id;
-      
-      
-      this.selectedCorrectAnswerId=this.findCorrectAnswerId(this.selectedAnswers);
-      console.log(this.findCorrectAnswerId(this.selectedAnswers));
+    
+        console.log(this.selectedQuestion.part);
+        
       this.partService.getPartBySubjectId(this.selectedQuestion.part.subject.id).subscribe(data=>{
         this.parts=data;
         this.selectedSubject=this.selectedQuestion.part.subject;
@@ -256,15 +244,11 @@ export class QuestionComponent implements OnInit, OnDestroy {
         case 'TF':{
           this.TF=true;
           this.MC=false;
-          
-          
           break;
         }
         case 'MC':{
           this.MC=true;
           this.TF=false;     
-          
-          //this.selectedAnswers=this.selectedQuestion.questionAnswerList;  
           break;
         }
           
@@ -276,38 +260,35 @@ export class QuestionComponent implements OnInit, OnDestroy {
   deletedQuestion(){
     this.selectedQuestion.deleted=true;
     this.questionService.deleteQuestion(this.selectedQuestion).subscribe(()=>{
-      
-      this.loadQuestions();
-      this.closeModalById('closeDeleteModal');
-      this.showSuccess('Xoá thành công', 'Hoàn thành');
+
+      this.fetchData('closeDeleteModal')
     }, error=>{
       console.log(error);  
-      this.showError('Xoá thất bại', 'Lỗi');
+      // this.showError('Xoá thất bại', 'Lỗi');
     })
   }
-  editQuestion(f: object){
-    console.log(f);
+  //change option of TF type
+  onChangeAnswerTF(selectedAnwserId: number){
+   
+    
+    this.selectedAnswers.forEach(item=>{
+      if(item.id===selectedAnwserId){
+        item.correct=true;
+      }
+      else(item.correct=false)
+    })
+    
+  }
+  editQuestion(){
     this.selectedQuestion.questionAnswersList= this.selectedAnswers;
     this.questionService.updateQuestion(this.selectedQuestion).subscribe(()=>{
-      this.loadQuestions();
-      this.closeModalById('closeEditModal');
-      this.showSuccess('Cập nhật thành công', 'Hoàn thành');
+
+      this.fetchData('closeEditModal');
     }, error=>{
-      console.log(error);     
-      this.showError('Cập nhật thất bại', 'Lỗi');
+      console.log(error); 
     })
     
   }
-  findCorrectAnswerId(array: any[]): number{
-    let id: number=-1;
-    array.forEach(item=>{
-      if(item.correct){
-        id=item.id;
-        
-      }
-    })
-    return id;
-    
-  }
+
 
 }

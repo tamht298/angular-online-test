@@ -12,14 +12,15 @@
 
         </div>
     </div>
-    
+
 </div>
 <br>
 <div class="col-sm-12">
     <div class="table-responsive-md">
-        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-striped table-hover">
+        <table id="candidate-table" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+            class="table table-striped dt-responsive table-hover">
 
-            <thead>
+            <thead class="table-header">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Họ</th>
@@ -31,21 +32,36 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container
-                    *ngFor="let candidate of candidates; let i = index">
+                <ng-container *ngFor="let candidate of candidates; let i = index">
                     <tr>
                         <th scope="row">{{i+1}}</th>
                         <td>{{candidate.lastName}}</td>
                         <td>{{candidate.firstName}}</td>
 
-                        <td>{{candidate.gender}}</td>
+                        <td>
+                            <ng-container *ngIf="candidate.gender==='MALE'; else elseTemplate">
+                                Nam
+                            </ng-container>
+                            <ng-template #elseTemplate>
+                                Nữ
+                            </ng-template>
+
+                        </td>
                         <td>{{candidate.phone}}</td>
                         <td>{{candidate.email}}</td>
                         <td>
-                            <a href="#editCandidateModal" class="btn btn-primary" data-toggle="modal"
-                                (click)="getSelectedId(candidate.id)"><i class="fa fa-pen"></i></a>&nbsp;
-                            <a href="#deleteCandidateModal" class="btn btn-danger" data-toggle="modal"
-                                (click)="getSelectedId(candidate.id)"><i class="fa fa-trash"></i></a>
+                            <div class="btn-group" role="group" aria-label="action-button">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#editCandidateModal" (click)="getSelectedId(candidate.id)">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    data-target="#deleteCandidateModal" (click)="getSelectedId(candidate.id)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+
+                            </div>
+
                         </td>
                     </tr>
                 </ng-container>
@@ -53,17 +69,14 @@
         </table>
 
     </div>
-    <!-- Paging  -->
-<!--    <div class="text-right">-->
-<!--        <pagination-controls (pageChange)="p = $event"></pagination-controls>-->
-<!--      </div>-->
 </div>
 <!--  -->
 <!-- Add Modal HTML -->
 <div id="addCandidateModal" tabindex="-1" role="dialog" class="modal fade">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form name="addForm" (ngSubmit)="addCandidate()" #form="ngForm" novalidate>
+            <form name="addForm" (ngSubmit)="f.form.valid && addCandidate()" #f="ngForm" novalidate>
+
                 <div class="modal-header">
                     <h4 class="modal-title">Thêm sinh viên</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -73,29 +86,31 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Họ</label>
-                                <input type="text" pattern="[a-zA-Z]*" placeholder="Last name" class="form-control"
+                                <input type="text" placeholder="Họ và tên đệm" class="form-control"
                                     #newLastName="ngModel" ngModel name="newLastName"
-                                    [(ngModel)]="newCandidate.lastName" required>
-                                <div *ngIf="newLastName.invalid && (newLastName.dirty || newLastName.touched)"
+                                    [(ngModel)]="newCandidate.lastName"
+                                    [ngClass]="{'is-invalid': newLastName.invalid && (newLastName.dirty || newLastName.touched|| f.submitted)}"
+                                    required>
+                                <div *ngIf="newLastName.invalid && (newLastName.dirty || newLastName.touched || f.submitted )"
                                     class="text text-danger">
-                                    Họ là bắt buộc!
+                                    <small>Họ là bắt buộc!</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tên</label>
-                                <input type="text" pattern="[a-zA-Z]*" placeholder="First name" class="form-control"
+                                <input type="text" placeholder="Tên sinh viên" class="form-control"
                                     #newFirstName="ngModel" ngModel name="newFirstName"
-                                    [(ngModel)]="newCandidate.firstName" required>
-                                <div *ngIf="newFirstName.invalid && (newFirstName.dirty || newFirstName.touched)"
+                                    [(ngModel)]="newCandidate.firstName"
+                                    [ngClass]="{'is-invalid': newFirstName.invalid && (newFirstName.dirty || newFirstName.touched|| f.submitted)}"
+                                    required>
+                                <div *ngIf="newFirstName.invalid && (newFirstName.dirty || newFirstName.touched|| f.submitted)"
                                     class="text text-danger">
                                     <div *ngIf="newFirstName?.errors.required">
-                                        Tên là bắt buộc!
+                                        <small>Tên là bắt buộc!</small>
                                     </div>
-                                    <div *ngIf="newFirstName?.errors.pattern">
-                                        Tên không hợp lệ!
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -103,12 +118,14 @@
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="Email" class="form-control" #newEmail="ngModel" ngModel
-                            name="newEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                            [(ngModel)]="newCandidate.email" required>
-                        <div *ngIf="newEmail.touched" class="text text-danger">
-                            <div *ngIf="newEmail?.errors?.required">Email là bắt buộc!</div>
-                            <div *ngIf="newEmail?.errors?.pattern">Email không hợp lệ!</div>
+                        <input type="email" placeholder="Địa chỉ email của sinh viên" class="form-control"
+                            #newEmail="ngModel" ngModel name="newEmail"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" [(ngModel)]="newCandidate.email" required
+                            [ngClass]="{'is-invalid': newEmail.invalid && (newEmail.dirty || newEmail.touched|| f.submitted)}">
+                        <div *ngIf="newEmail.invalid && (newEmail.dirty || newEmail.touched|| f.submitted)"
+                            class="text text-danger">
+                            <div *ngIf="newEmail?.errors?.required"><small>Email là bắt buộc!</small></div>
+                            <div *ngIf="newEmail?.errors?.pattern"><small>Email chưa hợp lệ!</small></div>
                         </div>
 
                     </div>
@@ -117,19 +134,13 @@
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label>Điện thoại</label>
-                                <input type="text" placeholder="Phone number" pattern="^0[0-9]*" class="form-control"
-                                    ngModel name="newPhone" #newPhone="ngModel" [(ngModel)]="newCandidate.phone"
-                                    required maxlength="11" minlength="10">
-                                <div *ngIf="newPhone.invalid && (newPhone.dirty || newPhone.touched)"
+                                <input type="tel" placeholder="Số điện thoại liên lạc" class="form-control" ngModel
+                                    name="newPhone" #newPhone="ngModel" [(ngModel)]="newCandidate.phone" required
+                                    [ngClass]="{'is-invalid': newPhone.invalid && (newPhone.dirty || newPhone.touched|| f.submitted)}">
+                                <div *ngIf="newPhone.invalid && (newPhone.dirty || newPhone.touched|| f.submitted)"
                                     class="text text-danger">
                                     <div *ngIf="newPhone?.errors.required">
-                                        Số điện thoại là bắt buộc!
-                                    </div>
-                                    <div *ngIf="newPhone?.errors.minlength">
-                                        Số điện thoại hợp lệ phải từ 10-11 số!
-                                    </div>
-                                    <div *ngIf="newPhone?.errors.pattern">
-                                        Số điện thoại phải bắt đầu từ 0
+                                        <small>Số điện thoại là bắt buộc!</small>
                                     </div>
                                 </div>
                             </div>
@@ -137,26 +148,30 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="newgender">Giới tính</label>
-                                <select class="custom-select" #newgender="ngModel" id="newgender" ngModel name="newgender" [(ngModel)]="newCandidate.gender" required>
+                                <select class="custom-select" #newgender="ngModel" id="newgender" ngModel
+                                    name="newgender" [(ngModel)]="newCandidate.gender"
+                                    [ngClass]="{'is-invalid': newgender.invalid && (newgender.dirty || newgender.touched|| f.submitted)}"
+                                    required>
 
-                                        <option value="MALE" selected>Nam</option>
-                                        <option value="FEMALE">Nữ</option>
+                                    <option value="MALE">Nam</option>
+                                    <option value="FEMALE">Nữ</option>
 
-                                    </select>
-                                <div *ngIf="newgender.invalid && (newgender.dirty || newgender.touched)" class="text text-danger">
+                                </select>
+                                <div *ngIf="newgender.invalid && (newgender.dirty || newgender.touched|| f.submitted)"
+                                    class="text text-danger">
                                     <div *ngIf="newgender?.errors.required">
-                                        Giới tính là bắt buộc!
+                                        <small>Giới tính là bắt buộc!</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="closeAddModal" class="btn btn-default" data-dismiss="modal" value="Huỳ">
+                    <input type="button" id="closeAddModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">
                     <input type="submit" class="btn btn-primary" value="Tạo">
+
                 </div>
             </form>
         </div>
@@ -166,39 +181,45 @@
 <div id="editCandidateModal" class="modal fade">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form (ngSubmit)="editCandidate()" #formEditCandidate="ngForm">
+            <form (ngSubmit)="formEditCandidate.form.valid && editCandidate()" #formEditCandidate="ngForm">
                 <div class="modal-header">
+
                     <h4 class="modal-title">Cập nhật thông tin sinh viên</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
+
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Tên</label>
-                                <input type="text" pattern="[a-zA-Z]*" placeholder="First name" class="form-control"
-                                    #editFirstName="ngModel" ngModel name="editFirstName"
-                                    [(ngModel)]="selectedCandidate.firstName" required>
-                                <div *ngIf="editFirstName.invalid && (editFirstName.dirty || editFirstName.touched)"
+                                <label>Họ</label>
+                                <input type="text" pattern="[a-zA-Z]*" placeholder="Họ và tên đệm" class="form-control"
+                                    #editLastName="ngModel" ngModel name="editLastName"
+                                    [(ngModel)]="selectedCandidate.lastName"
+                                    [ngClass]="{'is-invalid': editLastName.invalid && (editLastName.dirty || editLastName.touched|| formEditCandidate.submitted)}"
+                                    required>
+                                <div *ngIf="editLastName.invalid && (editLastName.dirty || editLastName.touched|| formEditCandidate.submitted)"
                                     class="text text-danger">
-                                    <div *ngIf="editFirstName?.errors.required">
-                                        Tên là bắt buộc!
+                                    <div *ngIf="editLastName?.errors.required">
+                                        <small>Họ là bắt buộc!</small>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Họ</label>
-                                <input type="text" pattern="[a-zA-Z]*" placeholder="Last name" class="form-control"
-                                    #editLastName="ngModel" ngModel name="editLastName"
-                                    [(ngModel)]="selectedCandidate.lastName" required>
-                                <div *ngIf="editLastName.invalid && (editLastName.dirty || editLastName.touched)"
+                                <label>Tên</label>
+                                <input type="text" pattern="[a-zA-Z]*" placeholder="Tên sinh viên" class="form-control"
+                                    #editFirstName="ngModel" ngModel name="editFirstName"
+                                    [(ngModel)]="selectedCandidate.firstName"
+                                    [ngClass]="{'is-invalid': editFirstName.invalid && (editFirstName.dirty || editFirstName.touched|| formEditCandidate.submitted)}"
+                                    required>
+                                <div *ngIf="editFirstName.invalid && (editFirstName.dirty || editFirstName.touched|| formEditCandidate.submitted)"
                                     class="text text-danger">
-                                    <div *ngIf="editLastName?.errors.required">
-                                        Họ là bắt buộc!
+                                    <div *ngIf="editFirstName?.errors.required">
+                                        <small>Tên là bắt buộc!</small>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -207,10 +228,13 @@
                         <label>Email</label>
                         <input type="email" placeholder="Email" class="form-control" #editEmail="ngModel" ngModel
                             name="editEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                            [(ngModel)]="selectedCandidate.email" required>
-                        <div *ngIf="editEmail.touched" class="text text-danger">
-                            <div *ngIf="editEmail?.errors?.required">Email là bắt buộc!</div>
-                            <div *ngIf="editEmail?.errors?.pattern">Email không hợp lệ!</div>
+                            [(ngModel)]="selectedCandidate.email"
+                            [ngClass]="{'is-invalid': editEmail.invalid && (editEmail.dirty || editEmail.touched|| formEditCandidate.submitted)}"
+                            required>
+                        <div *ngIf="editEmail.invalid && (editEmail.dirty || editEmail.touched|| formEditCandidate.submitted)"
+                            class="text text-danger">
+                            <div *ngIf="editEmail?.errors?.required"><small>Email là bắt buộc!</small></div>
+                            <div *ngIf="editEmail?.errors?.pattern"><small>Email chưa hợp lệ!</small></div>
                         </div>
                     </div>
 
@@ -218,19 +242,13 @@
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label>Điện thoại</label>
-                                <input type="tel" placeholder="Phone number" class="form-control" pattern="^0[0-9]*"
-                                    #editPhone="ngModel" ngModel name="editPhone" [(ngModel)]="selectedCandidate.phone"
-                                    required maxlength="11" minlength="10">
-                                <div *ngIf="editPhone.invalid && (editPhone.dirty || editPhone.touched)"
+                                <input type="tel" placeholder="Phone number" class="form-control" #editPhone="ngModel"
+                                    ngModel name="editPhone" [(ngModel)]="selectedCandidate.phone" required
+                                    [ngClass]="{'is-invalid': editPhone.invalid && (editPhone.dirty || editPhone.touched|| formEditCandidate.submitted)}">
+                                <div *ngIf="editPhone.invalid && (editPhone.dirty || editPhone.touched|| formEditCandidate.submitted)"
                                     class="text text-danger">
                                     <div *ngIf="editPhone?.errors.required">
-                                        Số điện thoại là bắt buộc!
-                                    </div>
-                                    <div *ngIf="editPhone?.errors.minlength">
-                                        Số điện thoại hợp lệ phải từ 10-11 số!
-                                    </div>
-                                    <div *ngIf="editPhone?.errors.pattern">
-                                        Số điện thoại phải bắt đầu từ 0
+                                        <small>Số điện thoại là bắt buộc!</small>
                                     </div>
                                 </div>
                             </div>
@@ -238,21 +256,22 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="editGender">Giới tính</label>
-                                <select class="form-control" id="editGender" #editGender="ngModel" ngModel name="editGender" [(ngModel)]="selectedCandidate.gender" required>
+                                <select class="form-control" id="editGender" #editGender="ngModel" ngModel
+                                    name="editGender" [(ngModel)]="selectedCandidate.gender" required
+                                    [ngClass]="{'is-invalid': editGender.invalid && (editGender.dirty || editGender.touched|| formEditCandidate.submitted)}">
 
-                                        <option value="MALE">Nam</option>
-                                        <option value="FEMALE">Nữ</option>
-                                        </select>
-                                <div *ngIf="editGender.invalid && (editGender.dirty || editGender.touched)" class="text text-danger">
+                                    <option value="MALE">Nam</option>
+                                    <option value="FEMALE">Nữ</option>
+                                </select>
+                                <div *ngIf="editGender.invalid && (editGender.dirty || editGender.touched|| formEditCandidate.submitted)"
+                                    class="text text-danger">
                                     <div *ngIf="editGender?.errors.required">
-                                        Giới tính là bắt buộc!
+                                        <small>Giới tính là bắt buộc!</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="closeEditModal" class="btn btn-default" data-dismiss="modal" value="Huỷ">

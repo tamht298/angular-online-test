@@ -34,6 +34,7 @@
               "src/assets/css/sb-admin.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/datatables.net-dt/css/jquery.dataTables.css"
+              
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -43,8 +44,7 @@
               "src/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
               "src/assets/vendor/jquery-easing/jquery.easing.min.js",
               "src/assets/js/sb-admin.min.js"
-
-
+              
             ]
           },
           "configurations": {
